@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Conta • Cyber X</title>
+    <link rel="shortcut icon" href="geral/img/logo/simbolo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="geral/css/style.css" />
+    <link rel="stylesheet" href="geral/css/media-query.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+    <header class="header" style="height: 80px; justify-content: center;">
+        <nav class="nav__subcontainer">
+            <a href="index.html" class="nav__logo" style="margin-bottom: 15px;">
+                <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
+                <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
+            </a>
+            <div class="search__btn">
+                <label for="input-search" id="search-title">
+                    <i class="ri-search-line icon-search"></i>
+                </label>
+                <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
+            </div>
+            <div class="nav__actions">
+                <div class="login__page" id="login-container">
+                    <i id="login-icon" class="ri-login-box-line login__btn"></i>
+                </div>
+                <i class="ri-moon-line change-theme" id="theme-button"></i>
+                <div class="cart__page">
+                    <a href="cart.html">
+                        <i class="ri-shopping-cart-line shop-btn"></i>
+                    </a>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </div>
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="ri-menu-5-line"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- ==== MAIN DA PÁGINA ==== -->
+    <main class="account__main" style="margin-top: 80px;">
+        <section class="account-container">
+            <h1>Minha Conta</h1>
+            <form id="accountForm">
+                <label for="accountName">Nome Completo</label>
+                <input type="text" id="accountName" name="full_name" readonly>
+
+                <label for="accountPhone">Telefone</label>
+                <input type="tel" id="accountPhone" name="phone" readonly>
+
+                <label for="accountEmail">Email</label>
+                <input type="email" id="accountEmail" name="email" readonly disabled>
+
+                <div class="account-actions">
+                    <button type="button" id="edit-btn" class="button">Editar</button>
+                    <button type="submit" id="save-btn" class="button" style="display: none;">Salvar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="wishlist-container">
+            <h2><i class="ri-heart-fill"></i> Minha Lista de Desejos</h2>
+            <div id="wishlistContainer">
+            </div>
+        </section>
+
+        <section class="orders-container">
+            <h2>Histórico de Pedidos</h2>
+            <div id="ordersContainer">
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__container">
+            <!-- Logo + redes -->
+            <div class="footer__column footer__logo">
+                <a href="index.html"><img src="geral/img/logo/logo branca.png" alt="CyberX"
+                        class="footer__logo-img logo__light"></a>
+                <a href="index.html"><img src="geral/img/logo/logo.png" alt="CyberX"
+                        class="footer__logo-img logo__dark"></a>
+                <div class="footer__socials">
+                    <a href="#"><i class="ri-facebook-fill"></i></a>
+                    <a href="#"><i class="ri-instagram-fill"></i></a>
+                    <a href="#"><i class="ri-twitter-fill"></i></a>
+                    <a href="#"><i class="ri-youtube-fill"></i></a>
+                    <a href="#"><i class="ri-pinterest-fill"></i></a>
+                    <a href="#"><i class="ri-discord-fill"></i></a>
+                </div>
+            </div>
+
+            <!-- Institucional -->
+            <div class="footer__column">
+                <h3>INSTITUCIONAL</h3>
+                <ul>
+                    <li><a href="about.html">Sobre Nós</a></li>
+                    <li><a href="howpay.html">Como Comprar</a></li>
+                    <li><a href="segurity.html">Segurança</a></li>
+                    <li><a href="distatch.html">Envio</a></li>
+                    <li><a href="payment.html">Pagamento</a></li>
+                    <li><a href="warranty.html">Tempo de Garantia</a></li>
+                    <li><a href="trades.html">Trocas e Devoluções</a></li>
+                    <li><a href="contact.html">Fale Conosco</a></li>
+                </ul>
+            </div>
+
+            <!-- Atendimento + pagamentos -->
+            <div class="footer__column">
+                <h3>ATENDIMENTO</h3>
+                <p><i class="ri-phone-fill"></i> (61) XXXXX-XXXX</p>
+                <p><i class="ri-mail-fill"></i> cyberx123@gmail.com</p>
+
+                <h3>FORMAS DE PAGAMENTO</h3>
+                <div class="footer__payments">
+                    <img src="geral/img/pagamentos/visa.png" alt="Visa">
+                    <img src="geral/img/pagamentos/mastercard.png" alt="Mastercard">
+                    <img src="geral/img/pagamentos/pix.png" alt="Pix">
+                    <img src="geral/img/pagamentos/amex.png" alt="Amex">
+                    <img src="geral/img/pagamentos/elo.png" alt="Elo">
+                    <img src="geral/img/pagamentos/boleto.png" alt="Boleto">
+                </div>
+            </div>
+            <span class="footer__copy">
+                © 2025 <a href="https://dev-vrmc-portfolio.netlify.app/" target="_blank"
+                    rel="noopener noreferrer">Victor
+                    Roger</a>. Todos os direitos reservados.
+            </span>
+        </div>
+    </footer>
+    <a href="#" class="scrollup" id="scroll-up">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <script type="module" src="geral/js/supabase.js"></script>
+    <script type="module" src="geral/js/products.js"></script>
+    <script type="module" src="geral/js/auth.js"></script>
+    <script type="module" src="geral/js/cart.js"></script>
+    <script type="module" src="geral/js/order.js"></script>
+    <script type="module" src="geral/js/ui.js"></script>
+    <script type="module" src="geral/js/account.js"></script>
+    <script type="module" src="geral/js/wishlist.js"></script>
+    <script type="module" src="geral/js/main.js"></script>
+</body>
+
+</html>
