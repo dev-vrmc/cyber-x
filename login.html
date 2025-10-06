@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="geral/img/logo/simbolo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="geral/css/style.css" />
+    <link rel="stylesheet" href="geral/css/media-query.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" />
+    <title>Tela de Login • Cyber X</title>
+</head>
+
+<body>
+    <div class="background-login">
+        <video autoplay muted loop playsinline>
+            <source src="geral/img/video-login.mp4" type="video/mp4">
+        </video>
+    </div>
+    </div>
+    <section class="section__login">
+        <div class="main-login">
+            <div class="main-column">
+                <div class="information__login">
+                    <h1> Entre ao mundo <span class="span">cybernético!</span></h1>
+                    <a href="index.html">
+                        <img class="information-image" src="geral/img/logo/logo branca.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="hr__login">
+                    <div class="point__line-left"></div>
+                    <div class="line__hr"></div>
+                    <div class="point__line-right"></div>
+                </div>
+                <div class="card-login">
+                    <form method="post" id="loginForm">
+                        <div class="textfield">
+                            <label for="user">Email:</label>
+                            <input type="email" name="email" class="input__login" placeholder="cyber.username"
+                                autocomplete="email" required maxlength="30">
+                            <label for="password">Senha:</label>
+                            <input type="password" name="senha" class="input__login" placeholder="Cyber123"
+                                autocomplete="current-password" required minlength="8">
+                        </div>
+                        <div class="button__login">
+                            <button class="button">Entrar</button>
+                        </div>
+                    </form>
+                    <div class="other-user">
+                        <p>Ainda não tem uma conta? <a href="cadaster.html" class="span">Clique aqui.</a></p>
+                        <p>Tem uma conta mais não lembra a senha? <a href="forget.html" class="span">Clique aqui.</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="index.html" class="logo-holograma-link">
+            <img src="geral/img/logo/simbolo.png" class="logo-holograma">
+        </a>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="geral/js/gsap.js"></script>
+    <script type="module" src="geral/js/supabase.js"></script>
+    <script type="module" src="geral/js/auth.js"></script>
+    <script type="module" src="geral/js/ui.js"></script>
+    <script type="module" src="geral/js/main.js"></script>
+    <script type="module" src="geral/js/login.js"></script>
+
+</body>
+
+</html>
