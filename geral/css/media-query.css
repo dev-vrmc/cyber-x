@@ -1,0 +1,197 @@
+/* ==========================================================
+   HEADER RESPONSIVO — 1PI
+   Versão otimizada para mobile, tablet e desktop
+   ========================================================== */
+
+/* BASE AJUSTES GERAIS */
+.header {
+  backdrop-filter: blur(8px);
+  background-color: var(--container-color);
+  transition: all 0.3s ease;
+}
+
+.nav__subcontainer,
+.nav_container {
+  transition: padding 0.3s ease;
+}
+
+/* ==========================
+   BREAKPOINT: até 1023px (TABLET e CELULAR)
+   ========================== */
+@media (max-width: 1023px) {
+  .nav__subcontainer {
+    padding: 0 1rem;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .nav__logo {
+    width: 180px;
+    margin-top: 0;
+  }
+
+  .search__btn {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.75rem;
+  }
+
+  #input-search {
+    width: 100%;
+    max-width: 300px;
+    font-size: 14px;
+  }
+
+  /* Menu hamburguer aparece */
+  .nav__toggle {
+    display: block;
+  }
+
+  /* Esconde menu de categorias padrão */
+  .nav_container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: var(--container-color);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding-top: 6rem;
+    transition: right 0.4s ease;
+    z-index: 999;
+  }
+
+  /* Mostra menu quando ativo (ex: .show-menu via JS) */
+  .nav_container.show-menu {
+    right: 0;
+  }
+
+  .nav__menu {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav__link {
+    font-size: 1.1rem;
+  }
+
+  .nav__item i.icon__nav {
+    display: none;
+  }
+
+  /* Botão de fechar menu */
+  .nav__close {
+    display: block;
+  }
+
+  /* Ações (login, carrinho, tema) */
+  .nav__actions {
+    gap: 1rem;
+  }
+
+  .login__page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .change-theme,
+  .shop-btn,
+  .login__btn {
+    font-size: 1.8rem;
+  }
+
+  /* Remove linha decorativa e progress-bar no mobile */
+  .hr__kit,
+  .progress-bar {
+    display: none;
+  }
+}
+
+/* ==========================
+   BREAKPOINT: até 767px (CELULAR)
+   ========================== */
+@media (max-width: 767px) {
+  .nav__subcontainer {
+    padding: 0 0.75rem;
+  }
+
+  .nav__logo {
+    width: 150px;
+  }
+
+  .search__btn {
+    padding: 6px;
+  }
+
+  #input-search {
+    max-width: 240px;
+  }
+
+  .nav__actions {
+    gap: 0.8rem;
+  }
+
+  .change-theme,
+  .shop-btn,
+  .login__btn {
+    font-size: 1.6rem;
+  }
+
+  .cart-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+}
+
+/* ==========================
+   BREAKPOINT: entre 1024px e 1279px (TABLETS GRANDES / LAPTOPS)
+   ========================== */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .nav__logo {
+    width: 210px;
+  }
+
+  .nav__subcontainer {
+    padding: 0 1.5rem;
+  }
+
+  .nav__list {
+    gap: 1.5rem;
+  }
+
+  #input-search {
+    width: 320px;
+  }
+}
+
+/* ==========================
+   BREAKPOINT: acima de 1280px (DESKTOP GRANDE)
+   ========================== */
+@media (min-width: 1280px) {
+  .nav__subcontainer {
+    padding: 0 3rem;
+  }
+
+  .nav__logo {
+    width: 240px;
+  }
+
+  #input-search {
+    width: 420px;
+  }
+
+  .nav__list {
+    gap: 2.5rem;
+  }
+}

@@ -89,13 +89,14 @@ const initSearchBar = () => {
 
 /*=============== MENU MOBILE ===============*/
 const initMobileMenu = () => {
-    const navMenu = document.getElementById("nav-menu");
-    const navToggle = document.getElementById("nav-toggle");
-    const navClose = document.getElementById("nav-close");
+  const navContainer = document.querySelector(".nav_container"); // alterado
+  const navToggle = document.getElementById("nav-toggle");
+  const navClose = document.getElementById("nav-close");
 
-    navToggle?.addEventListener("click", () => navMenu.classList.add("show-menu"));
-    navClose?.addEventListener("click", () => navMenu.classList.remove("show-menu"));
+  navToggle?.addEventListener("click", () => navContainer.classList.add("show-menu"));
+  navClose?.addEventListener("click", () => navContainer.classList.remove("show-menu"));
 };
+
 
 /*=============== TEMA ESCURO ===============*/
 const initThemeToggle = () => {

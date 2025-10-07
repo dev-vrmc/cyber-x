@@ -80,21 +80,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             ordersContainer.innerHTML = '<p>Não foi possível carregar o histórico de pedidos.</p>';
         } else if (orders.length === 0) {
             ordersContainer.innerHTML = '<p>Você ainda não fez nenhum pedido.</p>';
-        } else {
-            ordersContainer.innerHTML = orders.map(order => `
-                <div class="order-history-item">
-                    <h3>Pedido #${order.id} - ${new Date(order.created_at).toLocaleDateString()}</h3>
-                    <p>Status: <span class="order-status--${order.status}">${order.status}</span></p>
-                    <p>Total: ${Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-                    <ul>
-                        ${order.order_items.map(item => `
-                            <li>${item.quantity}x ${item.products.name}</li>
-                        `).join('')}
-                    </ul>
-                </div>
-            `).join('');
-        }
+    } else {
+        // --- INÍCIO DA MODIFICAÇÃO ---
+
+        // 1. Adicione este objeto de tradução
+        const statusTranslations = {
+            pending: 'Pendente',
+            shipped: 'Enviado',
+            completed: 'Concluído',
+            canceled: 'Cancelado'
+        };
+
+        ordersContainer.innerHTML = orders.map(order => `
+            <div class="order-history-item">
+                <h2>Pedido #${order.id} - ${new Date(order.created_at).toLocaleDateString()}</h2>
+                
+                <p>Status: <span class="order-status--${order.status}">${statusTranslations[order.status] || order.status}</span></p>
+
+                <p>Total: ${Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                <ul>
+                ${order.order_items.map(item => `
+                    <li>
+                        • ${item.quantity}x ${item.products?.name || 'Produto Removido'} — 
+                        ${Number(item.unit_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    </li>
+                `).join('')}
+                </ul>
+            </div>
+        `).join('');
+        // --- FIM DA MODIFICAÇÃO ---
     }
+}
     if (wishlistContainer) {
         const wishlistProducts = await wishlistManager.getWishlist();
         if (!wishlistProducts || wishlistProducts.length === 0) {

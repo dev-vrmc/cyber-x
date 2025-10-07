@@ -7,6 +7,57 @@ import { renderProducts, showToast } from './ui.js';
 import { authManager } from './auth.js';
 import { wishlistManager } from './wishlist.js'; // Importa o wishlistManager
 
+// ===============================================
+// INÍCIO DAS MODIFICAÇÕES
+// ===============================================
+
+// NOVA FUNÇÃO para renderizar as estrelas e a nota
+function renderRating(product) {
+    const container = document.getElementById('product-rating-container');
+    if (!container) return;
+
+    // Se não houver avaliações, exibe uma mensagem
+    if (!product.review_count || product.review_count === 0) {
+        container.innerHTML = `<p class="no-reviews">Este produto ainda não foi avaliado.</p>`;
+        return;
+    }
+
+    const rating = product.average_rating || 0;
+    const count = product.review_count;
+
+    let starsHTML = '';
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.4 ? 1 : 0; // Arredonda .5 para cima
+    const emptyStars = 5 - fullStars - halfStar;
+
+    // Adiciona estrelas cheias
+    for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<i class="ri-star-fill"></i>';
+    }
+    // Adiciona meia estrela se necessário
+    if (halfStar) {
+        starsHTML += '<i class="ri-star-half-fill"></i>';
+    }
+    // Adiciona estrelas vazias
+    for (let i = 0; i < emptyStars; i++) {
+        starsHTML += '<i class="ri-star-line"></i>';
+    }
+
+    const ratingText = parseFloat(rating).toFixed(1).replace('.', ',');
+    const reviewText = count === 1 ? 'avaliação' : 'avaliações';
+
+    container.innerHTML = `
+        <div class="stars">${starsHTML}</div>
+        <span class="rating-value">${ratingText}</span>
+        <span class="review-count">(${count} ${reviewText})</span>
+    `;
+}
+
+// ===============================================
+// FIM DAS MODIFICAÇÕES
+// ===============================================
+
+
 // Função para buscar e renderizar as avaliações de um produto
 async function fetchAndRenderReviews(productId) {
     const reviewsList = document.getElementById('reviews-list');
@@ -92,6 +143,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.product-detail').innerHTML = '<h1>Produto não encontrado.</h1>';
         return;
     }
+    
+    // ===============================================
+    // INÍCIO DA MODIFICAÇÃO
+    // ===============================================
+    // Chama a função para renderizar a nota e as estrelas
+    renderRating(product);
+    // ===============================================
+    // FIM DA MODIFICAÇÃO
+    // ===============================================
 
     // Preenche a página com as informações do produto
     document.title = `${product.name} • Cyber X`;
@@ -157,7 +217,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 showToast('Avaliação enviada com sucesso!');
                 reviewForm.reset();
+                // Recarrega as avaliações e a nota principal após o envio
                 await fetchAndRenderReviews(productId);
+                const updatedProduct = await productManager.getProductById(productId);
+                renderRating(updatedProduct);
             }
         });
 

@@ -15,7 +15,8 @@
 
     <div class="background-login">
         <video autoplay muted loop playsinline>
-            <source src="https://res.cloudinary.com/dklxgbhoc/video/upload/v1759781325/video-login_zppakr.mp4" type="video/mp4">
+            <source src="https://res.cloudinary.com/dklxgbhoc/video/upload/v1759781325/video-login_zppakr.mp4"
+                type="video/mp4">
         </video>
     </div>
     <section class="section__login">
@@ -42,8 +43,14 @@
                             <label for="tel">Telefone:</label>
                             <input type="tel" name="tel" placeholder="(00) 90000-0000" required class="input__login">
                             <label for="password">Senha:</label>
-                            <input type="password" name="senha" placeholder="Mínimo 8 caracteres"
-                                autocomplete="new-password" required minlength="8" class="input__login">
+                            <div class="password-field">
+                                <input type="password" id="password" name="senha" class="input__login"
+                                    placeholder="Cyber123" autocomplete="current-password" required minlength="8">
+                                <button type="button" id="togglePassword" class="toggle-password"
+                                    aria-label="Mostrar ou ocultar senha">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="button__login"> <button type="submit" class="button">Cadastrar</button>
                         </div>
@@ -64,6 +71,18 @@
     <script src="geral/js/ui.js"></script>
     <script src="geral/js/auth.js"></script>
     <script type="module" src="geral/js/cadaster.js"></script>
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePassword.innerHTML = isPassword
+                ? '<i class="ri-eye-off-line"></i>'
+                : '<i class="ri-eye-line"></i>';
+        })
+    </script>
 </body>
 
 </html>

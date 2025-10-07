@@ -20,13 +20,14 @@
         <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
       </a>
       <div class="search__btn">
-        <label for="search"><i class="ri-search-line icon-search"></i></label>
+        <label for="input-search" id="search-title">
+          <i class="ri-search-line icon-search"></i>
+        </label>
         <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
       </div>
       <div class="nav__actions">
-        <div class="login__page">
-          <i class="ri-login-box-line login__btn"></i>
-          <p class="login__text">Minha Conta</p>
+        <div class="login__page" id="login-container">
+          <i id="login-icon" class="ri-login-box-line login__btn"></i>
         </div>
         <i class="ri-moon-line change-theme" id="theme-button"></i>
         <div class="cart__page">
@@ -91,17 +92,21 @@
       </section>
 
       <aside class="info">
-        <div class="brand">
-          <div class="logo">
-            <img src="geral/img/logo/simbolo.png" alt="Logo">
-          </div>
-          <div>
-            <div class="meta" id="brandMeta"></div>
-            <div style="font-size:12px;" id="sku"></div>
+        <div class="brand-wishlist">
+          <div class="brand">
+            <div class="logo">
+              <img src="geral/img/logo/simbolo.png" alt="Logo">
+            </div>
+            <div>
+              <div class="meta" id="brandMeta"></div>
+              <div style="font-size:12px;" id="sku"></div>
+            </div>
           </div>
           <button id="wishlist-btn" class="btn-wishlist ri-heart-line" title="Adicionar à Lista de Desejos"></button>
         </div>
         <h1 class="title" id="title"></h1>
+        <div class="rating-summary" id="product-rating-container">
+        </div>
         <p class="desc" id="desc"></p>
         <div class="price-row">
           <div>
@@ -149,6 +154,11 @@
   <div class="title">
     <h1 class="product-relations">Produtos relacionados</h1>
   </div>
+  <div class="hr__kit">
+    <div class="point__line-left"></div>
+    <div class="hr__category"></div>
+    <div class="point__line-right"></div>
+  </div>
 
   <section class="related-products">
     <div id="related-products-container" class="products-grid"></div>
@@ -157,7 +167,6 @@
 
   <footer class="footer">
     <div class="footer__container">
-      <!-- Logo + redes -->
       <div class="footer__column footer__logo">
         <a href="index.html"><img src="geral/img/logo/logo branca.png" alt="CyberX"
             class="footer__logo-img logo__light"></a>
@@ -172,7 +181,6 @@
         </div>
       </div>
 
-      <!-- Institucional -->
       <div class="footer__column">
         <h3>INSTITUCIONAL</h3>
         <ul>
@@ -187,7 +195,6 @@
         </ul>
       </div>
 
-      <!-- Atendimento + pagamentos -->
       <div class="footer__column">
         <h3>ATENDIMENTO</h3>
         <p><i class="ri-phone-fill"></i> (61) XXXXX-XXXX</p>
@@ -221,25 +228,38 @@
   <script type="module" src="geral/js/main.js"></script>
   <script type="module" src="geral/js/item.js"></script>
   <script type="module" src="geral/js/wishlist.js"></script>
-  <script type="module">
+<script type="module">
     import { productManager } from './geral/js/products.js';
     import { renderProducts } from './geral/js/ui.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
       const relatedContainer = document.getElementById('related-products-container');
+      if (!relatedContainer) return;
 
-      if (!relatedContainer) {
-        console.warn('⚠️ Container de produtos relacionados não encontrado.');
-        return;
-      }
+      // 1. Pega o ID do produto atual pela URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      if (!productId) return;
 
-      // Busca produtos da mesma categoria (exemplo: 'peripherals')
-      const relatedProducts = await productManager.getProducts({ categorySlug: 'peripherals' });
+      // 2. Busca os dados do produto principal para descobrir sua categoria
+      const mainProduct = await productManager.getProductById(productId);
+      if (!mainProduct || !mainProduct.category || !mainProduct.category.slug) return;
+      
+      const categorySlug = mainProduct.category.slug;
 
-      // Renderiza os cards relacionados
-      renderProducts(relatedProducts, 'related-products-container');
+      // 3. Busca produtos da mesma categoria, com limite
+      const relatedProducts = await productManager.getProducts({
+        categorySlug: categorySlug, // Usa a categoria dinâmica
+        limit: 5 // Pega 5 para garantir 4 mesmo que o próprio produto venha na lista
+      });
 
-      // Clique no card ou botão "Ver detalhes"
+      // 4. Filtra para não exibir o próprio produto na lista de relacionados
+      const filteredProducts = relatedProducts.filter(p => p.id != productId).slice(0, 4);
+
+      // 5. Renderiza os cards
+      renderProducts(filteredProducts, 'related-products-container');
+
+      // Adiciona o evento de clique
       relatedContainer.addEventListener('click', (e) => {
         const card = e.target.closest('.product-card');
         if (card && card.dataset.id) {
@@ -248,8 +268,6 @@
       });
     });
   </script>
-
-
 </body>
 
 </html>
