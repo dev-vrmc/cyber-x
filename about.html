@@ -2,13 +2,14 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Minha Conta • Cyber X</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="geral/img/logo/simbolo.png" type="image/x-icon" />
     <link rel="stylesheet" href="geral/css/style.css" />
     <link rel="stylesheet" href="geral/css/media-query.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <title>Sobre Nós • Cyber X</title>
 </head>
 
 <body>
@@ -80,40 +81,48 @@
         </div>
         <div class="progress-bar"></div>
     </header>
-    <!-- ==== MAIN DA PÁGINA ==== -->
-    <main class="account__main" style="margin-top: 80px;">
-        <section class="account-container">
-            <h1>Minha Conta</h1>
-            <form id="accountForm">
-                <label for="accountName">Nome Completo</label>
-                <input type="text" id="accountName" name="full_name" readonly>
+    <main class="main-content">
+        <section class="text-section">
+            <h2 class="section-title">Sobre Nós</h2>
 
-                <label for="accountPhone">Telefone</label>
-                <input type="tel" id="accountPhone" name="phone" readonly>
-
-                <label for="accountEmail">Email</label>
-                <input type="email" id="accountEmail" name="email" readonly disabled>
-
-                <div class="account-actions">
-                    <button type="button" id="edit-btn" class="button">Editar</button>
-                    <button type="submit" id="save-btn" class="button" style="display: none;">Salvar</button>
-                </div>
-            </form>
-        </section>
-
-        <section class="wishlist-container">
-            <h2><i class="ri-heart-fill"></i> Minha Lista de Desejos</h2>
-            <div id="wishlistContainer">
-            </div>
-        </section>
-
-        <section class="orders-container">
-            <h2>Histórico de Pedidos</h2>
-            <div id="ordersContainer">
-            </div>
+            <p class="section-text"><span class="span">Sobre Nós</span><br>
+                Seja bem-vindo à Cyber X — onde o game é sério e a tecnologia é de respeito.<br>
+                A gente nasceu em 2025, dentro de um grupo do Senac, com um objetivo claro: criar um projeto e-commerce
+                voltado ao universo gamer e tech. O que era um desafio de sala de aula virou uma missão real — entregar
+                os melhores produtos com qualidade, confiança e muita dedicação.
+            </p>
+            <br>
+            <p class="section-text"><span class="span">Nosso propósito?</span><br>
+                Aprender, evoluir e fazer sempre melhor.
+                A cada venda, a cada cliente satisfeito, a gente sobe de nível como profissionais e como marca. Estamos
+                aqui pra jogar o jogo do e-commerce com seriedade, e claro — com estilo.
+            </p>
+            <br>
+            <p class="section-text"><span class="span">O que você encontra na Cyber X:</span><br>
+                • Hardware de ponta pra turbinar seu setup<br>
+                • Periféricos de qualidade pra elevar seu desempenho<br>
+                • Monitores insanos, PCs prontos e celulares tops<br>
+                • Cadeiras gamers que te seguram até o último round
+            </p>
+            <br>
+            <p class="section-text"><span class="span">Por que escolher a gente?</span><br>
+                • Garantia estendida (porque confiança importa)<br>
+                • Selos aprovando a qualidade dos nossos produtos<br>
+                • Atendimento online e ágil, sem enrolação
+            </p>
+            <br>
+            <p class="section-text"><span class="span">Quem tá no comando?</span><br>
+                Victor, Roger, Adriana, Messias e Arthur.
+                Quatro apaixonados por tecnologia, jogos e desafios — jogando juntos pra levar a Cyber X cada vez mais
+                longe. Aqui, tecnologia e jogo andam lado a lado.
+            </p>
+            <br>
+            <p class="section-text">
+                <span class="span">Cyber X:</span> seu setup começa aqui.
+            </p>
+            <br>
         </section>
     </main>
-
     <footer class="footer">
         <div class="footer__container">
             <!-- Logo + redes -->
@@ -174,15 +183,17 @@
         <i class="ri-arrow-up-line"></i>
     </a>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="geral/js/gsap.js"></script>
     <script type="module" src="geral/js/supabase.js"></script>
-    <script type="module" src="geral/js/products.js"></script>
     <script type="module" src="geral/js/auth.js"></script>
-    <script type="module" src="geral/js/cart.js"></script>
-    <script type="module" src="geral/js/order.js"></script>
     <script type="module" src="geral/js/ui.js"></script>
-    <script type="module" src="geral/js/account.js"></script>
-    <script type="module" src="geral/js/wishlist.js"></script>
     <script type="module" src="geral/js/main.js"></script>
+</body>
+
+</html>
 </body>
 
 </html>
