@@ -13,74 +13,77 @@
 </head>
 
 <body>
-    <header class="header">
-        <nav class="nav__subcontainer">
-            <a href="index.html" class="nav__logo">
-                <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
-                <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
-            </a>
+  <header class="header">
+    <nav class="nav__subcontainer">
+      <a href="index.html" class="nav__logo">
+        <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
+        <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
+      </a>
+        <div class="search-container"> 
             <div class="search__btn">
                 <label for="input-search" id="search-title">
                     <i class="ri-search-line icon-search"></i>
                 </label>
-                <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
+                <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" autocomplete="off" />
             </div>
-            <div class="nav__actions">
-                <div class="login__page" id="login-container">
-                    <i id="login-icon" class="ri-login-box-line login__btn"></i>
-                </div>
-                <i class="ri-moon-line change-theme" id="theme-button"></i>
-                <div class="cart__page">
-                    <a href="cart.html">
-                        <i class="ri-shopping-cart-line shop-btn"></i>
-                    </a>
-                    <span id="cart-badge" class="cart-badge">0</span>
-                </div>
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="ri-menu-5-line"></i>
-                </div>
-            </div>
-        </nav>
-        <nav class="nav_container">
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="hardware.html" class="nav__link">Hardware</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="peripherals.html" class="nav__link">Periféricos</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="computers.html" class="nav__link">Computadores</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="chairs.html" class="nav__link">Cadeiras</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="monitors.html" class="nav__link">Monitores</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="cellphones.html" class="nav__link">Celulares</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                </ul>
-                <div class="nav__close" id="nav-close">
-                    <i class="ri-close-fill"></i>
-                </div>
-            </div>
-        </nav>
-        <div class="hr__kit">
-            <div class="point__line-left"></div>
-            <div class="hr__line"></div>
-            <div class="point__line-right"></div>
+            <div id="search-results-dropdown"></div>
         </div>
-        <div class="progress-bar"></div>
-    </header>
+      <div class="nav__actions">
+        <div class="login__page" id="login-container">
+          <i id="login-icon" class="ri-login-box-line login__btn"></i>
+        </div>
+        <i class="ri-moon-line change-theme" id="theme-button"></i>
+        <div class="cart__page">
+          <a href="cart.html">
+            <i class="ri-shopping-cart-line shop-btn"></i>
+          </a>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </div>
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="ri-menu-5-line"></i>
+        </div>
+      </div>
+    </nav>
+    <nav class="nav_container">
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <a href="hardware.html" class="nav__link">Hardware</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="peripherals.html" class="nav__link">Periféricos</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="computers.html" class="nav__link">Computadores</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="chairs.html" class="nav__link">Cadeiras</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="monitors.html" class="nav__link">Monitores</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="cellphones.html" class="nav__link">Celulares</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+        </ul>
+        <div class="nav__close" id="nav-close">
+          <i class="ri-close-fill"></i>
+        </div>
+      </div>
+    </nav>
+    <div class="hr__kit">
+      <div class="point__line-left"></div>
+      <div class="hr__line"></div>
+      <div class="point__line-right"></div>
+    </div>
+    <div class="progress-bar"></div>
+  </header>
 
     <main class="category-main">
         <h1 class="category-title">Celulares</h1>

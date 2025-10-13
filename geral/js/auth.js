@@ -124,6 +124,46 @@ class AuthManager {
         }
         showToast('Link de recuperação enviado para o seu e-mail.');
     }
+    // Add this method inside the AuthManager class
+// Em geral/js/auth.js
+
+// SUBSTITUA ESTA FUNÇÃO
+async uploadAvatar(file) {
+    const user = await this.getCurrentUser();
+    if (!user) throw new Error('Usuário não autenticado.');
+
+    const fileExt = file.name.split('.').pop();
+    // CRIA UM NOME DE ARQUIVO ÚNICO COM UM TIMESTAMP PARA EVITAR PROBLEMAS DE CACHE
+    const fileName = `avatar-${Date.now()}.${fileExt}`; 
+    // CORREÇÃO: O CAMINHO AGORA INCLUI UMA PASTA COM O ID DO USUÁRIO
+    const filePath = `${user.id}/${fileName}`; 
+
+    // Upload file to Supabase Storage
+    const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true }); // 'upsert' permite substituir se já existir
+
+    if (uploadError) {
+        throw uploadError;
+    }
+
+    // Get public URL of the uploaded file
+    const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+    // Update user's profile with the new avatar URL
+    const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: data.publicUrl })
+        .eq('id', user.id);
+
+    if (updateError) {
+        throw updateError;
+    }
+
+    return data.publicUrl;
+}
 }
 
 export const authManager = new AuthManager();

@@ -3,7 +3,7 @@
 import { supabase } from './supabase.js';
 import { productManager } from './products.js';
 import { cart } from './cart.js';
-import { renderProducts, showToast } from './ui.js';
+import { renderProducts, showToast, showLoader, hideLoader } from './ui.js';
 import { authManager } from './auth.js';
 import { wishlistManager } from './wishlist.js'; // Importa o wishlistManager
 
@@ -52,21 +52,16 @@ function renderRating(product) {
         <span class="review-count">(${count} ${reviewText})</span>
     `;
 }
-
 // ===============================================
-// FIM DAS MODIFICAÇÕES
 // ===============================================
-
-
-// Função para buscar e renderizar as avaliações de um produto
 async function fetchAndRenderReviews(productId) {
     const reviewsList = document.getElementById('reviews-list');
     if (!reviewsList) return;
 
-    // Busca reviews e o nome do autor (full_name) da tabela 'profiles'
+    // MODIFICADO: Seleciona também a 'avatar_url' do perfil
     const { data: reviews, error } = await supabase
         .from('reviews')
-        .select('*, profile:profiles(full_name)')
+        .select('*, profile:profiles(full_name, avatar_url)')
         .eq('product_id', productId)
         .order('created_at', { ascending: false });
 
@@ -78,16 +73,31 @@ async function fetchAndRenderReviews(productId) {
     if (reviews.length === 0) {
         reviewsList.innerHTML = '<p>Este produto ainda não tem avaliações. Seja o primeiro!</p>';
     } else {
-        reviewsList.innerHTML = reviews.map(review => `
+        reviewsList.innerHTML = reviews.map(review => {
+            const avatarSrc = review.profile?.avatar_url || 'geral/img/logo/simbolo.png';
+            const authorName = review.profile?.full_name || 'Usuário Anônimo';
+
+            const imagesHTML = (review.image_urls || []).map(url =>
+                `<img src="${url}" alt="Imagem da avaliação" class="review-card-image">`
+            ).join('');
+
+            return `
             <div class="review-card">
-                <div class="stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                <header>
+                    <img src="${avatarSrc}" alt="Avatar de ${authorName}" class="review-avatar">
+                    <div class="review-author-info">
+                        <span class="review-author-name">${authorName}</span>
+                        <div class="stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                    </div>
+                </header>
                 <p>${review.comment}</p>
-                <footer>- ${review.profile?.full_name || 'Anônimo'}, ${new Date(review.created_at).toLocaleDateString()}</footer>
+                <div class="review-card-images">${imagesHTML}</div>
+                <footer>${new Date(review.created_at).toLocaleDateString()}</footer>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 }
-
 // Função para simular o cálculo de frete
 async function calculateShipping() {
     const cepInput = document.getElementById('cepInput');
@@ -143,7 +153,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.product-detail').innerHTML = '<h1>Produto não encontrado.</h1>';
         return;
     }
-    
+
     // ===============================================
     // INÍCIO DA MODIFICAÇÃO
     // ===============================================
@@ -196,31 +206,88 @@ document.addEventListener('DOMContentLoaded', async () => {
             wishlistBtn.classList.remove('ri-heart-line');
         }
 
+        // Adicione um listener para o input de arquivos para mostrar o preview
+        const imageUploadInput = document.getElementById('review-images-upload');
+        const imagePreviewContainer = document.getElementById('review-images-preview');
+
+        imageUploadInput.addEventListener('change', () => {
+            imagePreviewContainer.innerHTML = ''; // Limpa previews antigos
+            const files = Array.from(imageUploadInput.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    img.classList.add('review-image-preview');
+                    imagePreviewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
         reviewForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const user = await authManager.getCurrentUser(); // Garante que temos o usuário
+            if (!user) return;
+
+            showLoader();
+
             const ratingInput = reviewForm.querySelector('input[name="rating"]:checked');
             if (!ratingInput) {
                 showToast('Por favor, selecione uma nota de 1 a 5 estrelas.', 'error');
+                hideLoader();
                 return;
             }
+
             const rating = ratingInput.value;
             const comment = document.getElementById('review-comment').value;
+            const files = document.getElementById('review-images-upload').files;
+            const imageUrls = [];
 
-            const { error } = await supabase.from('reviews').insert({
-                product_id: productId,
-                user_id: user.id,
-                rating,
-                comment
-            });
-            if (error) {
-                showToast(`Erro: ${error.message}`, 'error');
-            } else {
+            try {
+                // Faz o upload de todas as imagens em paralelo
+                const uploadPromises = Array.from(files).map(async (file) => {
+                    const fileName = `${user.id}/${productId}/${Date.now()}-${file.name}`;
+                    const { error: uploadError } = await supabase.storage
+                        .from('review-images')
+                        .upload(fileName, file);
+
+                    if (uploadError) {
+                        throw new Error(`Falha no upload de ${file.name}: ${uploadError.message}`);
+                    }
+
+                    const { data } = supabase.storage.from('review-images').getPublicUrl(fileName);
+                    return data.publicUrl;
+                });
+
+                // Espera todas as promessas de upload terminarem
+                const uploadedUrls = await Promise.all(uploadPromises);
+                imageUrls.push(...uploadedUrls);
+
+                // Insere a avaliação no banco de dados
+                const { error: insertError } = await supabase.from('reviews').insert({
+                    product_id: productId,
+                    user_id: user.id,
+                    rating,
+                    comment,
+                    image_urls: imageUrls.length > 0 ? imageUrls : null,
+                });
+
+                if (insertError) throw insertError;
+
                 showToast('Avaliação enviada com sucesso!');
                 reviewForm.reset();
-                // Recarrega as avaliações e a nota principal após o envio
-                await fetchAndRenderReviews(productId);
+                document.getElementById('review-images-preview').innerHTML = '';
+                await fetchAndRenderReviews(productId); // Re-renderiza as avaliações
+
+                // Re-busca o produto para atualizar a nota média na tela
                 const updatedProduct = await productManager.getProductById(productId);
-                renderRating(updatedProduct);
+                if (updatedProduct) renderRating(updatedProduct);
+
+            } catch (error) {
+                showToast(`Erro: ${error.message}`, 'error');
+            } finally {
+                hideLoader();
             }
         });
 

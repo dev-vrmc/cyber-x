@@ -19,12 +19,15 @@
         <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
         <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
       </a>
-      <div class="search__btn">
-        <label for="input-search" id="search-title">
-          <i class="ri-search-line icon-search"></i>
-        </label>
-        <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
-      </div>
+        <div class="search-container"> 
+            <div class="search__btn">
+                <label for="input-search" id="search-title">
+                    <i class="ri-search-line icon-search"></i>
+                </label>
+                <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" autocomplete="off" />
+            </div>
+            <div id="search-results-dropdown"></div>
+        </div>
       <div class="nav__actions">
         <div class="login__page" id="login-container">
           <i id="login-icon" class="ri-login-box-line login__btn"></i>

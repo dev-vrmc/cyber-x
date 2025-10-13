@@ -13,86 +13,137 @@
 </head>
 
 <body>
-    <header class="header">
-        <nav class="nav__subcontainer">
-            <a href="index.html" class="nav__logo">
-                <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
-                <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
-            </a>
-            <div class="search__btn">
-                <label for="input-search" id="search-title">
-                    <i class="ri-search-line icon-search"></i>
-                </label>
-                <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
-            </div>
-            <div class="nav__actions">
-                <div class="login__page" id="login-container">
-                    <i id="login-icon" class="ri-login-box-line login__btn"></i>
-                </div>
-                <i class="ri-moon-line change-theme" id="theme-button"></i>
-                <div class="cart__page">
-                    <a href="cart.html">
-                        <i class="ri-shopping-cart-line shop-btn"></i>
-                    </a>
-                    <span id="cart-badge" class="cart-badge">0</span>
-                </div>
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="ri-menu-5-line"></i>
-                </div>
-            </div>
-        </nav>
-        <nav class="nav_container">
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="hardware.html" class="nav__link">Hardware</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="peripherals.html" class="nav__link">Periféricos</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="computers.html" class="nav__link">Computadores</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="chairs.html" class="nav__link">Cadeiras</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="monitors.html" class="nav__link">Monitores</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                    <li class="nav__item">
-                        <a href="cellphones.html" class="nav__link">Celulares</a>
-                        <i class="ri-arrow-down-s-line icon__nav"></i>
-                    </li>
-                </ul>
-                <div class="nav__close" id="nav-close">
-                    <i class="ri-close-fill"></i>
-                </div>
-            </div>
-        </nav>
-        <div class="hr__kit">
-            <div class="point__line-left"></div>
-            <div class="hr__line"></div>
-            <div class="point__line-right"></div>
+  <header class="header">
+    <nav class="nav__subcontainer">
+      <a href="index.html" class="nav__logo">
+        <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
+        <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
+      </a>
+      <div class="search-container">
+        <div class="search__btn">
+          <label for="input-search" id="search-title">
+            <i class="ri-search-line icon-search"></i>
+          </label>
+          <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30"
+            autocomplete="off" />
         </div>
-        <div class="progress-bar"></div>
-    </header>
+        <div id="search-results-dropdown"></div>
+      </div>
+      <div class="nav__actions">
+        <div class="login__page" id="login-container">
+          <i id="login-icon" class="ri-login-box-line login__btn"></i>
+        </div>
+        <i class="ri-moon-line change-theme" id="theme-button"></i>
+        <div class="cart__page">
+          <a href="cart.html">
+            <i class="ri-shopping-cart-line shop-btn"></i>
+          </a>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </div>
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="ri-menu-5-line"></i>
+        </div>
+      </div>
+    </nav>
+    <nav class="nav_container">
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <a href="hardware.html" class="nav__link">Hardware</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="peripherals.html" class="nav__link">Periféricos</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="computers.html" class="nav__link">Computadores</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="chairs.html" class="nav__link">Cadeiras</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="monitors.html" class="nav__link">Monitores</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+          <li class="nav__item">
+            <a href="cellphones.html" class="nav__link">Celulares</a>
+            <i class="ri-arrow-down-s-line icon__nav"></i>
+          </li>
+        </ul>
+        <div class="nav__close" id="nav-close">
+          <i class="ri-close-fill"></i>
+        </div>
+      </div>
+    </nav>
+    <div class="hr__kit">
+      <div class="point__line-left"></div>
+      <div class="hr__line"></div>
+      <div class="point__line-right"></div>
+    </div>
+    <div class="progress-bar"></div>
+  </header>
 
 
   <main class="cart__main">
     <section class="cart-container">
-      <h1>Seu Carrinho</h1>
-      <div id="cart-items"></div>
-      <div class="cart-summary">
-        <p>Total: <span id="cart-total">R$ 0,00</span></p>
-        <button id="checkout-btn" class="button">Finalizar Compra</button>
+      <div id="order-confirmation" class="order-confirmation" style="display: none;">
+        <i class="ri-checkbox-circle-line confirmation-icon"></i>
+        <h2>Pedido Realizado com Sucesso!</h2>
+        <p>Seu pedido foi registrado. Você pode compartilhar um resumo dele no WhatsApp ou conferir os detalhes na sua
+          conta.</p>
+        <div class="confirmation-actions">
+          <a href="#" id="whatsapp-share-btn" class="button" target="_blank">
+            <i class="ri-whatsapp-line"></i> Compartilhar no WhatsApp
+          </a>
+          <a href="account.html" class="button-secondary">Ver Meus Pedidos</a>
+        </div>
+      </div>
+
+      <div id="cart-content">
+        <h1>Seu Carrinho</h1>
+        <div id="cart-items"></div>
+        <div class="cart-summary">
+        <div class="shipping-calc-container">
+          <div class="shipping-calc">
+            <input type="text" id="shipping-cep-input" placeholder="Calcular frete (CEP)">
+            <button id="calc-shipping-btn" class="button">OK</button>
+          </div>
+          <div id="shipping-result-container"></div>
+        </div>
+        <div class="totals-container">
+          <p>Subtotal: <span id="cart-subtotal">R$ 0,00</span></p>
+          <p>Frete: <span id="cart-shipping">R$ 0,00</span></p>
+          <p class="grand-total">Total: <span id="cart-total">R$ 0,00</span></p>
+
+          <button id="checkout-btn" class="button">Finalizar Compra</button>
+        </div>
+      </div>
       </div>
     </section>
   </main>
+
+  <div id="confirm-address-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Confirmar Dados para Entrega</h2>
+      <p>Por favor, confirme se o endereço e telefone abaixo estão corretos para finalizar o pedido.</p>
+
+      <div class="address-details">
+        <strong>Nome:</strong> <span id="modal-user-name"></span><br>
+        <strong>Telefone:</strong> <span id="modal-user-phone"></span><br>
+        <hr>
+        <strong>Endereço:</strong><br>
+        <span id="modal-user-address"></span>
+      </div>
+
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="button-secondary">Editar Dados</button>
+        <button id="modal-confirm-btn" class="button">Confirmar e Finalizar</button>
+      </div>
+    </div>
+  </div>
 
   <footer class="footer">
     <div class="footer__container">
@@ -158,95 +209,215 @@
   <script type="module" src="geral/js/cart.js"></script>
   <script type="module" src="geral/js/products.js"></script>
   <script type="module" src="geral/js/main.js"></script>
-  <script type="module">
+<script type="module">
     import { cart } from './geral/js/cart.js';
     import { authManager } from './geral/js/auth.js';
     import { orderManager } from './geral/js/order.js';
+    import { showToast, showLoader, hideLoader } from './geral/js/ui.js';
 
-    // Função para gerar a mensagem do WhatsApp (versão melhorada)
-    function generateWhatsAppMessage(order, cartItems, userProfile) {
-      const customerName = userProfile?.full_name || 'Cliente';
+    // NOVO: Função que calcula o frete com base no estado (UF)
+    function getShippingCostByState(state) {
+        const regioes = {
+            centroOeste: { states: ['DF', 'GO', 'MT', 'MS'], price: 18.50 },
+            sudeste:     { states: ['SP', 'RJ', 'ES', 'MG'], price: 24.90 },
+            sul:         { states: ['PR', 'SC', 'RS'], price: 28.00 },
+            nordeste:    { states: ['BA', 'SE', 'AL', 'PE', 'PB', 'RN', 'CE', 'PI', 'MA'], price: 35.70 },
+            norte:       { states: ['AM', 'RR', 'AP', 'PA', 'TO', 'RO', 'AC'], price: 45.90 }
+        };
 
-      let message = `🛒 *CONFIRMAÇÃO DE PEDIDO*\n\n`;
-      message += `👤 *Nome:* ${customerName}\n`;
-      message += `📦 *Pedido Nº:* ${order.id}\n\n`;
-
-      message += `🧾 *Itens do Pedido:*\n`;
-      cartItems.forEach(item => {
-        message += `• ${item.quantity}x _${item.name}_ — R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
-      });
-
-      message += `\n💰 *Total:* R$ ${Number(order.total).toFixed(2).replace('.', ',')}\n`;
-      message += `📅 *Data:* ${new Date().toLocaleDateString('pt-BR')}\n\n`;
-      message += `✅ *Aguardando confirmação do vendedor.*`;
-
-      return message;
+        for (const regiao in regioes) {
+            if (regioes[regiao].states.includes(state.toUpperCase())) {
+                return regioes[regiao].price;
+            }
+        }
+        return 30.00; // Valor padrão caso o estado não seja encontrado
     }
 
+    function generateWhatsAppMessage(order, cartItems, userProfile, shippingInfo) {
+      // ... esta função continua exatamente igual, sem alterações ...
+      const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      let itemsList = cartItems.map(item => `   - ${item.quantity}x ${item.name} (${formatCurrency(item.price * item.quantity)})`).join('\n');
+      const subtotal = cart.getCartTotal();
+      const shippingCost = shippingInfo ? shippingInfo.price : 0;
+      const deliveryAddress = shippingInfo.address ? `${shippingInfo.address.logradouro}, ${shippingInfo.address.bairro} - ${shippingInfo.address.localidade}/${shippingInfo.address.uf}` : 'Endereço de entrega a confirmar.';
+      const message = `
+*Resumo do meu Pedido na Cyber X* 🚀
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- CÓDIGO RESTAURADO ---
-      // Renderiza os itens do carrinho na página
+Olá! Este é um resumo do meu pedido *Nº ${order.id}*.
+
+*Itens:*
+${itemsList}
+
+-----------------------------------
+*Subtotal:* ${formatCurrency(subtotal)}
+*Frete:* ${shippingCost > 0 ? formatCurrency(shippingCost) : 'Grátis'}
+*TOTAL:* *${formatCurrency(order.total)}*
+-----------------------------------
+
+*Endereço de Entrega (CEP: ${shippingInfo.cep}):*
+${deliveryAddress}
+
+Obrigado!
+        `;
+      return message.trim();
+    }
+    
+    function renderShippingDetails() {
+        // ... esta função continua exatamente igual, sem alterações ...
+        const shippingContainer = document.getElementById('shipping-result-container');
+        const savedShipping = JSON.parse(sessionStorage.getItem('shippingInfo'));
+        if (savedShipping && savedShipping.address && shippingContainer) {
+            shippingContainer.innerHTML = `<div class="shipping-details"><p><strong>Endereço de Entrega (CEP: ${savedShipping.cep}):</strong></p><p>${savedShipping.address.logradouro}, ${savedShipping.address.bairro} - ${savedShipping.address.localidade}/${savedShipping.address.uf}</p></div>`;
+        } else {
+            shippingContainer.innerHTML = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
       cart.renderCartPage();
+      renderShippingDetails();
 
       const cartItemsContainer = document.getElementById('cart-items');
+      const calcShippingBtn = document.getElementById('calc-shipping-btn');
+      const shippingCepInput = document.getElementById('shipping-cep-input');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      const modal = document.getElementById('confirm-address-modal');
+      const confirmBtn = document.getElementById('modal-confirm-btn');
+      const cancelBtn = document.getElementById('modal-cancel-btn');
 
-      // Evento para atualizar a quantidade
+      const userProfileForCep = await authManager.fetchUserProfile();
+      if (userProfileForCep && userProfileForCep.address_zipcode) {
+        shippingCepInput.value = userProfileForCep.address_zipcode;
+      }
+      
+      // --- Lógica de add/remover do carrinho (sem alterações) ---
+      cartItemsContainer.addEventListener('click', (e) => {
+        const target = e.target;
+        if (!target.dataset.id && !target.closest('[data-id]')) return;
+        const id = parseInt(target.dataset.id || target.closest('[data-id]').dataset.id, 10);
+        if (target.classList.contains('cart-item-remove') || target.closest('.cart-item-remove')) {
+          cart.removeFromCart(id);
+        } else if (target.classList.contains('qty-btn')) {
+          const action = target.dataset.action;
+          const input = target.parentElement.querySelector('.cart-item-quantity');
+          let currentQty = parseInt(input.value, 10);
+          if (action === 'increase') currentQty++;
+          else if (action === 'decrease') currentQty--;
+          cart.updateQuantity(id, currentQty);
+        }
+      });
       cartItemsContainer.addEventListener('change', (e) => {
         if (e.target.classList.contains('cart-item-quantity')) {
-          const id = parseInt(e.target.dataset.id, 10);
-          const quantity = parseInt(e.target.value, 10);
-          cart.updateQuantity(id, quantity);
+            const id = parseInt(e.target.dataset.id, 10);
+            const quantity = parseInt(e.target.value, 10);
+            cart.updateQuantity(id, quantity);
         }
       });
+      // --- Fim da Lógica de add/remover ---
 
-      // Evento para remover um item
-      cartItemsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('cart-item-remove')) {
-          const id = parseInt(e.target.dataset.id, 10);
-          cart.removeFromCart(id);
+
+      // --- ALTERADO: Lógica de Frete com preço por região e frete grátis ---
+      async function calculateAndRenderShipping() {
+        const cep = shippingCepInput.value.replace(/\D/g, '');
+        if (cep.length !== 8) {
+          showToast('Por favor, insira um CEP válido.', 'error');
+          return;
         }
+
+        showLoader();
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+
+          if (data.erro) {
+            showToast('CEP não encontrado.', 'error');
+            sessionStorage.removeItem('shippingInfo');
+            return;
+          }
+
+          // --- LÓGICA DE PREÇO ASSERTIVO ---
+          const freeShippingThreshold = 299.90; // Valor para frete grátis
+          const subtotal = cart.getCartTotal();
+          let shippingPrice = getShippingCostByState(data.uf); // Calcula o preço pela região
+          let toastMessage = `Frete calculado com sucesso!`;
+
+          // Verifica se o cliente ganhou frete grátis
+          if (subtotal >= freeShippingThreshold) {
+              shippingPrice = 0;
+              toastMessage = 'Parabéns! Você ganhou frete grátis!';
+          }
+          // --- FIM DA LÓGICA ---
+
+          const shippingInfo = {
+            cep: cep,
+            price: shippingPrice,
+            address: data
+          };
+
+          sessionStorage.setItem('shippingInfo', JSON.stringify(shippingInfo));
+          showToast(toastMessage, 'success');
+          cart.renderCartPage();
+          renderShippingDetails();
+
+        } catch (error) {
+          showToast('Erro ao buscar CEP. Tente novamente.', 'error');
+        } finally {
+          hideLoader();
+        }
+      }
+      calcShippingBtn.addEventListener('click', calculateAndRenderShipping);
+      shippingCepInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') calculateAndRenderShipping();
       });
-      // --- FIM DO CÓDIGO RESTAURADO ---
 
-
-      const checkoutBtn = document.getElementById('checkout-btn');
+      // --- Lógica do modal (sem alterações) ---
       checkoutBtn.addEventListener('click', async () => {
+        showLoader();
         const user = await authManager.getCurrentUser();
-        if (!user) {
-          alert('Você precisa estar logado para finalizar a compra.');
-          window.location.href = 'login.html';
-          return;
-        }
-
-        const cartItems = cart.getCart();
-        if (cartItems.length === 0) {
-          alert('Seu carrinho está vazio.');
-          return;
-        }
-
-        const newOrder = await orderManager.createOrder(cartItems);
-
-        if (newOrder && newOrder.id) {
-          const userProfile = await authManager.fetchUserProfile();
-          const storePhoneNumber = '5561992260378'; // substitua pelo número real
-          const message = generateWhatsAppMessage(newOrder, cartItems, userProfile);
-          const whatsappUrl = `https://wa.me/${storePhoneNumber}?text=${encodeURIComponent(message)}`;
-
-          window.open(whatsappUrl, '_blank');
-          alert('Seu pedido foi registrado! Uma mensagem de confirmação será aberta no WhatsApp para você enviar.');
-
-          cart.clearCart();
-          setTimeout(() => {
-            window.location.href = 'account.html';
-          }, 2000);
-
-        } else {
-          alert('Ocorreu um erro ao finalizar sua compra. Tente novamente.');
-        }
+        if (!user) { window.location.href = 'login.html'; return; }
+        if (cart.getCart().length === 0) { showToast('Seu carrinho está vazio.', 'error'); hideLoader(); return; }
+        if (!sessionStorage.getItem('shippingInfo')) { showToast('Por favor, calcule o frete antes de finalizar.', 'error'); hideLoader(); return; }
+        const userProfile = await authManager.fetchUserProfile();
+        if (!userProfile.address_street || !userProfile.address_zipcode) { showToast('Por favor, complete seu endereço em "Minha Conta".', 'error'); hideLoader(); return; }
+        
+        document.getElementById('modal-user-name').textContent = userProfile.full_name;
+        document.getElementById('modal-user-phone').textContent = userProfile.phone;
+        document.getElementById('modal-user-address').innerHTML = `${userProfile.address_street}, Nº ${userProfile.address_number} <br>${userProfile.address_neighborhood} - ${userProfile.address_city}/${userProfile.address_state}`;
+        hideLoader();
+        modal.classList.add('show');
       });
+      // --- Fim da lógica do modal ---
+
+      async function proceedToCheckout() {
+        // ... esta função continua exatamente igual, sem alterações ...
+        showLoader();
+        const userProfile = await authManager.fetchUserProfile();
+        const shippingInfo = JSON.parse(sessionStorage.getItem('shippingInfo'));
+        const newOrder = await orderManager.createOrder(cart.getCart());
+        if (newOrder && newOrder.id) {
+          const message = generateWhatsAppMessage(newOrder, cart.getCart(), userProfile, shippingInfo);
+          const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+          document.getElementById('whatsapp-share-btn').href = whatsappUrl;
+          document.getElementById('cart-content').style.display = 'none';
+          document.getElementById('order-confirmation').style.display = 'flex';
+          showToast('Pedido registrado com sucesso!', 'success');
+          cart.clearCart();
+          sessionStorage.removeItem('shippingInfo');
+        } else {
+          showToast('Erro ao finalizar a compra. Tente novamente.', 'error');
+        }
+        modal.classList.remove('show');
+        hideLoader();
+      }
+
+      confirmBtn.addEventListener('click', proceedToCheckout);
+      cancelBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        window.location.href = 'account.html';
+      });
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
     });
-  </script>
+</script>
 </body>
 
 </html>

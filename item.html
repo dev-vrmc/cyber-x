@@ -19,11 +19,15 @@
         <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
         <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
       </a>
-      <div class="search__btn">
-        <label for="input-search" id="search-title">
-          <i class="ri-search-line icon-search"></i>
-        </label>
-        <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
+      <div class="search-container">
+        <div class="search__btn">
+          <label for="input-search" id="search-title">
+            <i class="ri-search-line icon-search"></i>
+          </label>
+          <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30"
+            autocomplete="off" />
+        </div>
+        <div id="search-results-dropdown"></div>
       </div>
       <div class="nav__actions">
         <div class="login__page" id="login-container">
@@ -146,6 +150,13 @@
           class="ri-star-fill"></label>
       </div>
       <textarea id="review-comment" placeholder="Escreva seu comentário..." required></textarea>
+
+      <div class="review-upload-section">
+        <label for="review-images-upload" class="button">Adicionar Fotos (opcional)</label>
+        <input type="file" id="review-images-upload" multiple accept="image/*" style="display:none;">
+        <div id="review-images-preview" class="images-preview-container"></div>
+      </div>
+
       <button type="submit" class="button">Enviar Avaliação</button>
     </form>
     <p id="review-login-notice">Você precisa estar <a href="login.html">logado</a> para deixar uma avaliação.</p>
@@ -228,7 +239,7 @@
   <script type="module" src="geral/js/main.js"></script>
   <script type="module" src="geral/js/item.js"></script>
   <script type="module" src="geral/js/wishlist.js"></script>
-<script type="module">
+  <script type="module">
     import { productManager } from './geral/js/products.js';
     import { renderProducts } from './geral/js/ui.js';
 
@@ -244,7 +255,7 @@
       // 2. Busca os dados do produto principal para descobrir sua categoria
       const mainProduct = await productManager.getProductById(productId);
       if (!mainProduct || !mainProduct.category || !mainProduct.category.slug) return;
-      
+
       const categorySlug = mainProduct.category.slug;
 
       // 3. Busca produtos da mesma categoria, com limite

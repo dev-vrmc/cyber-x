@@ -15,15 +15,19 @@
 <body>
     <header class="header">
         <nav class="nav__subcontainer">
-            <a href="index.html" class="nav__logo" style="margin-bottom: 15px;">
+            <a href="index.html" class="nav__logo">
                 <img src="geral/img/logo/logo branca.png" alt="Logo Preta" class="logo__light" />
                 <img src="geral/img/logo/logo.png" alt="Logo Branca" class="logo__dark" />
             </a>
-            <div class="search__btn">
-                <label for="input-search" id="search-title">
-                    <i class="ri-search-line icon-search"></i>
-                </label>
-                <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30" />
+            <div class="search-container">
+                <div class="search__btn">
+                    <label for="input-search" id="search-title">
+                        <i class="ri-search-line icon-search"></i>
+                    </label>
+                    <input type="text" name="search" id="input-search" placeholder="O que está buscando?" maxlength="30"
+                        autocomplete="off" />
+                </div>
+                <div id="search-results-dropdown"></div>
             </div>
             <div class="nav__actions">
                 <div class="login__page" id="login-container">
@@ -88,63 +92,65 @@
         <section id="products-container" class="products"></section>
     </main>
 
-  <footer class="footer">
-    <div class="footer__container">
-      <!-- Logo + redes -->
-      <div class="footer__column footer__logo">
-        <a href="index.html"><img src="geral/img/logo/logo branca.png" alt="CyberX"
-            class="footer__logo-img logo__light"></a>
-        <a href="index.html"><img src="geral/img/logo/logo.png" alt="CyberX" class="footer__logo-img logo__dark"></a>
-        <div class="footer__socials">
-          <a href="#"><i class="ri-facebook-fill"></i></a>
-          <a href="#"><i class="ri-instagram-fill"></i></a>
-          <a href="#"><i class="ri-twitter-fill"></i></a>
-          <a href="#"><i class="ri-youtube-fill"></i></a>
-          <a href="#"><i class="ri-pinterest-fill"></i></a>
-          <a href="#"><i class="ri-discord-fill"></i></a>
+    <footer class="footer">
+        <div class="footer__container">
+            <!-- Logo + redes -->
+            <div class="footer__column footer__logo">
+                <a href="index.html"><img src="geral/img/logo/logo branca.png" alt="CyberX"
+                        class="footer__logo-img logo__light"></a>
+                <a href="index.html"><img src="geral/img/logo/logo.png" alt="CyberX"
+                        class="footer__logo-img logo__dark"></a>
+                <div class="footer__socials">
+                    <a href="#"><i class="ri-facebook-fill"></i></a>
+                    <a href="#"><i class="ri-instagram-fill"></i></a>
+                    <a href="#"><i class="ri-twitter-fill"></i></a>
+                    <a href="#"><i class="ri-youtube-fill"></i></a>
+                    <a href="#"><i class="ri-pinterest-fill"></i></a>
+                    <a href="#"><i class="ri-discord-fill"></i></a>
+                </div>
+            </div>
+
+            <!-- Institucional -->
+            <div class="footer__column">
+                <h3>INSTITUCIONAL</h3>
+                <ul>
+                    <li><a href="about.html">Sobre Nós</a></li>
+                    <li><a href="howpay.html">Como Comprar</a></li>
+                    <li><a href="segurity.html">Segurança</a></li>
+                    <li><a href="distatch.html">Envio</a></li>
+                    <li><a href="payment.html">Pagamento</a></li>
+                    <li><a href="warranty.html">Tempo de Garantia</a></li>
+                    <li><a href="trades.html">Trocas e Devoluções</a></li>
+                    <li><a href="contact.html">Fale Conosco</a></li>
+                </ul>
+            </div>
+
+            <!-- Atendimento + pagamentos -->
+            <div class="footer__column">
+                <h3>ATENDIMENTO</h3>
+                <p><i class="ri-phone-fill"></i> (61) XXXXX-XXXX</p>
+                <p><i class="ri-mail-fill"></i> cyberx123@gmail.com</p>
+
+                <h3>FORMAS DE PAGAMENTO</h3>
+                <div class="footer__payments">
+                    <img src="geral/img/pagamentos/visa.png" alt="Visa">
+                    <img src="geral/img/pagamentos/mastercard.png" alt="Mastercard">
+                    <img src="geral/img/pagamentos/pix.png" alt="Pix">
+                    <img src="geral/img/pagamentos/amex.png" alt="Amex">
+                    <img src="geral/img/pagamentos/elo.png" alt="Elo">
+                    <img src="geral/img/pagamentos/boleto.png" alt="Boleto">
+                </div>
+            </div>
+            <span class="footer__copy">
+                © 2025 <a href="https://dev-vrmc-portfolio.netlify.app/" target="_blank"
+                    rel="noopener noreferrer">Victor
+                    Roger</a>. Todos os direitos reservados.
+            </span>
         </div>
-      </div>
-
-      <!-- Institucional -->
-      <div class="footer__column">
-        <h3>INSTITUCIONAL</h3>
-        <ul>
-          <li><a href="about.html">Sobre Nós</a></li>
-          <li><a href="howpay.html">Como Comprar</a></li>
-          <li><a href="segurity.html">Segurança</a></li>
-          <li><a href="distatch.html">Envio</a></li>
-          <li><a href="payment.html">Pagamento</a></li>
-          <li><a href="warranty.html">Tempo de Garantia</a></li>
-          <li><a href="trades.html">Trocas e Devoluções</a></li>
-          <li><a href="contact.html">Fale Conosco</a></li>
-        </ul>
-      </div>
-
-      <!-- Atendimento + pagamentos -->
-      <div class="footer__column">
-        <h3>ATENDIMENTO</h3>
-        <p><i class="ri-phone-fill"></i> (61) XXXXX-XXXX</p>
-        <p><i class="ri-mail-fill"></i> cyberx123@gmail.com</p>
-
-        <h3>FORMAS DE PAGAMENTO</h3>
-        <div class="footer__payments">
-          <img src="geral/img/pagamentos/visa.png" alt="Visa">
-          <img src="geral/img/pagamentos/mastercard.png" alt="Mastercard">
-          <img src="geral/img/pagamentos/pix.png" alt="Pix">
-          <img src="geral/img/pagamentos/amex.png" alt="Amex">
-          <img src="geral/img/pagamentos/elo.png" alt="Elo">
-          <img src="geral/img/pagamentos/boleto.png" alt="Boleto">
-        </div>
-      </div>
-      <span class="footer__copy">
-        © 2025 <a href="https://dev-vrmc-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer">Victor
-          Roger</a>. Todos os direitos reservados.
-      </span>
-    </div>
-  </footer>
-  <a href="#" class="scrollup" id="scroll-up">
-    <i class="ri-arrow-up-line"></i>
-  </a>
+    </footer>
+    <a href="#" class="scrollup" id="scroll-up">
+        <i class="ri-arrow-up-line"></i>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="geral/js/supabase.js"></script>
@@ -153,28 +159,56 @@
     <script src="geral/js/cart.js"></script>
     <script src="geral/js/order.js"></script>
     <script src="geral/js/ui.js"></script>
+    <script src="geral/js/main.js" type="module"></script>
 
     <script type="module">
         import { productManager } from './geral/js/products.js';
-        import { renderProducts } from './geral/js/ui.js';
+        import { renderProducts, showLoader, hideLoader } from './geral/js/ui.js';
+        import { authManager } from './geral/js/auth.js';
+        import { cart } from './geral/js/cart.js';
 
-        document.addEventListener('DOMContentLoaded', async () => {
+        async function performSearch() {
+            showLoader();
+            const titleEl = document.getElementById('search-title');
+            const containerEl = document.getElementById('products-container');
             const urlParams = new URLSearchParams(window.location.search);
             const query = urlParams.get('q');
-            const titleEl = document.getElementById('search-title');
+
+            const profile = await authManager.fetchUserProfile();
+            const isAdmin = profile?.role === 'admin';
 
             if (query) {
-                titleEl.textContent = `Resultados para: "${query}"`;
+                // Atualiza o título principal da página, não o do header
+                const mainTitleEl = document.querySelector('main > h1');
+                if (mainTitleEl) mainTitleEl.textContent = `Resultados para: "${query}"`;
 
-                // ✅ CORRIGIDO: Usa o objeto 'productManager' (minúsculo)
                 const searchResults = await productManager.searchProducts(query);
 
-                renderProducts(searchResults, 'products-container');
+                if (searchResults && searchResults.length > 0) {
+                    renderProducts(searchResults, 'products-container', isAdmin);
+                } else {
+                    containerEl.innerHTML = '<p style="text-align: center; width: 100%;">Nenhum produto encontrado para sua busca.</p>';
+                }
+
             } else {
-                titleEl.textContent = 'Nenhum termo de busca fornecido.';
-                document.getElementById('products-container').innerHTML = '';
+                const mainTitleEl = document.querySelector('main > h1');
+                if (mainTitleEl) mainTitleEl.textContent = 'Nenhum termo de busca fornecido.';
+                containerEl.innerHTML = '';
+            }
+            hideLoader();
+        }
+
+        document.getElementById('products-container').addEventListener('click', e => {
+            if (e.target.classList.contains('btn__product')) {
+                const card = e.target.closest('.product-card');
+                if (card && card.dataset.id) {
+                    window.location.href = `item.html?id=${card.dataset.id}`;
+                }
             }
         });
+
+        // Usa 'pageshow' para re-executar a busca toda vez que a página for exibida
+        window.addEventListener('pageshow', performSearch);
     </script>
 </body>
 

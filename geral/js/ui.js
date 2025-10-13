@@ -85,3 +85,14 @@ export async function renderProducts(products, containerId) {
         });
     }
 }
+
+/*=============== LOADER ===============*/
+export function showLoader() {
+    const loader = document.getElementById('loader-overlay');
+    if (loader) loader.classList.add('show');
+}
+
+export function hideLoader() {
+    const loader = document.getElementById('loader-overlay');
+    if (loader) loader.classList.remove('show');
+}

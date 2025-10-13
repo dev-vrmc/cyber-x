@@ -1,5 +1,6 @@
 import { authManager } from './auth.js';
 import { updateCartBadge } from './ui.js';
+import { productManager } from './products.js';
 
 /*=============== FUNÇÃO DE LOGIN / ADMIN ===============*/
 const renderLoginContainer = async () => {
@@ -75,14 +76,57 @@ const renderLoginContainer = async () => {
 
 
 
-/*=============== LÓGICA DE BUSCA ===============*/
+/*=============== LÓGICA DE BUSCA COM DROPDOWN ===============*/
 const initSearchBar = () => {
     const searchInput = document.getElementById('input-search');
-    if (!searchInput) return;
+    const resultsDropdown = document.getElementById('search-results-dropdown');
+    if (!searchInput || !resultsDropdown) return;
+
+    let debounceTimeout;
+
+    const handleSearch = async () => {
+        const query = searchInput.value.trim();
+
+        if (query.length < 2) { // Só busca com 2 ou mais caracteres
+            resultsDropdown.style.display = 'none';
+            return;
+        }
+
+        const products = await productManager.searchProducts(query, 5); // Busca até 5 produtos
+
+        if (products && products.length > 0) {
+            resultsDropdown.innerHTML = products.map(p => `
+                <a href="item.html?id=${p.id}" class="search-result-item">
+                    <img src="${p.img || 'geral/img/logo/simbolo.png'}" alt="${p.name}">
+                    <div class="info">
+                        <h4>${p.name}</h4>
+                        <p>${Number(p.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                    </div>
+                </a>
+            `).join('');
+            resultsDropdown.style.display = 'block';
+        } else {
+            resultsDropdown.innerHTML = '<p style="padding: 12px; text-align: center;">Nenhum produto encontrado.</p>';
+            resultsDropdown.style.display = 'block';
+        }
+    };
+
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(handleSearch, 350); // Espera 350ms após a digitação
+    });
 
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && searchInput.value.trim()) {
             window.location.href = `search.html?q=${encodeURIComponent(searchInput.value.trim())}`;
+        }
+    });
+
+    // Esconde o dropdown se clicar fora dele
+    document.addEventListener('click', (e) => {
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer && !searchContainer.contains(e.target)) {
+            resultsDropdown.style.display = 'none';
         }
     });
 };

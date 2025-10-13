@@ -1,24 +1,27 @@
 // Arquivo: geral/js/forget.js
-
-// CORREÇÃO: O 'import' agora funcionará corretamente com o type="module" no HTML.
 import { authManager } from './auth.js';
 import { showToast } from './ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const forgetForm = document.getElementById('forgetForm');
 
-    if (forgetForm) {
-        forgetForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    forgetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = forgetForm.querySelector('input[name="email"]').value;
+        
+        // Adiciona um feedback visual para o usuário
+        const submitButton = forgetForm.querySelector('button');
+        submitButton.textContent = 'Enviando...';
+        submitButton.disabled = true;
 
-            const emailInput = forgetForm.querySelector('input[name="email"]');
-            const email = emailInput.value;
+        await authManager.resetPassword(email);
 
-            // Chama a função do authManager para resetar a senha
-            await authManager.resetPassword(email);
-            
-            // Limpa o campo após o envio
-            emailInput.value = ''; 
-        });
-    }
+        // Mesmo que a função já mostre um toast, podemos adicionar um aqui
+        // para informar que o processo foi concluído e reativar o botão.
+        showToast('Se o e-mail estiver cadastrado, um link de recuperação será enviado.');
+
+        submitButton.textContent = 'Recuperar';
+        submitButton.disabled = false;
+        forgetForm.reset();
+    });
 });

@@ -106,11 +106,21 @@ async function loadOrders() {
     const container = document.getElementById('adminOrders');
     if (!container) return;
 
+    // --- ALTERADO: Adicionado os campos de endereço no select ---
     const { data: orders, error } = await supabase
         .from('orders')
         .select(`
             id, created_at, total, status,
-            profiles!inner(full_name),
+            profiles!inner(
+                full_name,
+                address_street,
+                address_number,
+                address_complement,
+                address_neighborhood,
+                address_city,
+                address_state,
+                address_zipcode
+            ),
             order_items ( quantity, unit_price, products!inner(name) )
         `)
         .order('created_at', { ascending: false });
@@ -125,7 +135,7 @@ async function loadOrders() {
         return;
     }
 
-    // --- INÍCIO DA MODIFICAÇÃO NO LAYOUT ---
+    // --- ALTERADO: Modificação no layout para incluir o endereço ---
     container.innerHTML = orders.map(order => {
         const statusMap = {
             pending: 'Pedido pendente.',
@@ -134,15 +144,31 @@ async function loadOrders() {
             canceled: 'Pedido cancelado.'
         };
 
+        // --- NOVO: Bloco de HTML para o endereço ---
+        const addressHtml = order.profiles ? `
+            <div class="order-address">
+                <strong>Endereço de Entrega:</strong>
+                <p>
+                    ${order.profiles.address_street || 'Rua não informada'}, Nº ${order.profiles.address_number || 'S/N'}<br>
+                    ${order.profiles.address_complement ? order.profiles.address_complement + '<br>' : ''}
+                    ${order.profiles.address_neighborhood || 'Bairro não informado'} - ${order.profiles.address_city || 'Cidade não informada'}/${order.profiles.address_state || 'UF'}<br>
+                    CEP: ${order.profiles.address_zipcode || 'CEP não informado'}
+                </p>
+            </div>
+            <br>
+        ` : '<p>Endereço não disponível.</p>';
+
         return `
         <div class="admin-order">
             <div class="order-header">
-                <h2>Pedido Nº: ${order.id}</h2>
-                <p><strong>Nome:</strong> ${order.profiles?.full_name || 'Usuário Removido'}</p>
+                <h2>Pedido Nº: ${order.id}</h2><br>
+                <p><strong>Nome:</strong> ${order.profiles?.full_name || 'Usuário Removido'}</p><br>
             </div>
 
+            ${addressHtml} 
+
             <div class="order-details">
-                <strong>Itens do Pedido:</strong>
+                <strong>Itens do Pedido:</strong><br>
                 <ul>
                 ${order.order_items.map(item => `
                     <li>
@@ -154,8 +180,8 @@ async function loadOrders() {
             </div>
 
             <div class="order-footer">
-                <p><strong>Total:</strong> ${Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-                <p><strong>Data:</strong> ${new Date(order.created_at).toLocaleDateString('pt-BR')}</p>
+                <p><strong>Total:</strong> ${Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p><br>
+                <p><strong>Data:</strong> ${new Date(order.created_at).toLocaleDateString('pt-BR')}</p><br>
             </div>
             
             <p class="order-status-text">${statusMap[order.status]}</p>
@@ -172,7 +198,6 @@ async function loadOrders() {
             </div>
         </div>
     `}).join('');
-    // --- FIM DA MODIFICAÇÃO NO LAYOUT ---
 
     // Adiciona listener para o select de status
     container.querySelectorAll('.order-status-select').forEach(select => {
@@ -180,11 +205,11 @@ async function loadOrders() {
             const orderId = e.target.dataset.id;
             const newStatus = e.target.value;
             await updateOrderStatus(orderId, newStatus);
-            await loadOrders(); // Recarrega para atualizar o texto do status
+            await loadOrders(); 
         });
     });
 
-    // --- NOVO: Adiciona listener para os botões de excluir pedido ---
+    // Adiciona listener para os botões de excluir pedido
     container.querySelectorAll('.delete-order-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             handleDeleteOrder(e.target.dataset.id);
