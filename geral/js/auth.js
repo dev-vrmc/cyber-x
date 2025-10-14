@@ -56,7 +56,6 @@ class AuthManager {
             .select('*')
             .eq('id', user.id)
             .single();
-
         if (error) {
             console.error('Error fetching profile:', error);
             this.profile = null;
@@ -114,9 +113,9 @@ class AuthManager {
 
     async resetPassword(email) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-  redirectTo: "https://cyber-x-eccomerce.netlify.app/password-reset",
-});
-
+            // ✅ A URL deve apontar para a sua página de redefinição de senha
+            redirectTo: `${window.location.origin}/password-reset.html`,
+        });
 
         if (error) {
             showToast(error.message, 'error');
