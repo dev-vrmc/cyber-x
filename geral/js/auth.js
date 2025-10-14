@@ -30,7 +30,7 @@ class AuthManager {
             }
         });
     }
-    
+
     // NOVO: Função para verificar se o usuário é admin
     async isAdmin() {
         if (!this.authCheckCompleted) {
@@ -113,9 +113,10 @@ class AuthManager {
     }
 
     async resetPassword(email) {
+        const baseUrl = window.location.origin;
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             // ✅ A URL deve apontar para a sua página de redefinição de senha
-            redirectTo: `https://cyber-x-eccomerce.netlify.app/password-reset`,
+             redirectTo: `${baseUrl}/password-reset`,
         });
 
         if (error) {
@@ -125,39 +126,39 @@ class AuthManager {
         showToast('Link de recuperação enviado para o seu e-mail.');
     }
 
-async uploadAvatar(file) {
-    const user = await this.getCurrentUser();
-    if (!user) throw new Error('Usuário não autenticado.');
+    async uploadAvatar(file) {
+        const user = await this.getCurrentUser();
+        if (!user) throw new Error('Usuário não autenticado.');
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `avatar-${Date.now()}.${fileExt}`; 
-    const filePath = `${user.id}/${fileName}`; 
+        const fileExt = file.name.split('.').pop();
+        const fileName = `avatar-${Date.now()}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
 
-    const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true }); 
+        const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(filePath, file, { upsert: true });
 
-    if (uploadError) {
-        throw uploadError;
+        if (uploadError) {
+            throw uploadError;
+        }
+
+        // Get public URL of the uploaded file
+        const { data } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+
+        // Update user's profile with the new avatar URL
+        const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ avatar_url: data.publicUrl })
+            .eq('id', user.id);
+
+        if (updateError) {
+            throw updateError;
+        }
+
+        return data.publicUrl;
     }
-
-    // Get public URL of the uploaded file
-    const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-    // Update user's profile with the new avatar URL
-    const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: data.publicUrl })
-        .eq('id', user.id);
-
-    if (updateError) {
-        throw updateError;
-    }
-
-    return data.publicUrl;
-}
 }
 
 export const authManager = new AuthManager();
