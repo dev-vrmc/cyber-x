@@ -113,11 +113,10 @@ class AuthManager {
     }
 
     async resetPassword(email) {
-        const baseUrl = window.location.origin;
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            // ✅ A URL deve apontar para a sua página de redefinição de senha
-             redirectTo: `${baseUrl}/password-reset`,
-        });
+  redirectTo: "https://cyber-x-eccomerce.netlify.app/password-reset",
+});
+
 
         if (error) {
             showToast(error.message, 'error');
