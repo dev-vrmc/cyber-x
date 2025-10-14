@@ -115,7 +115,7 @@ class AuthManager {
     async resetPassword(email) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             // ✅ A URL deve apontar para a sua página de redefinição de senha
-            redirectTo: `https://cyber-x-eccomerce.netlify.app/password-reset.html`,
+            redirectTo: `https://cyber-x-eccomerce.netlify.app/password-reset`,
         });
 
         if (error) {
@@ -124,24 +124,18 @@ class AuthManager {
         }
         showToast('Link de recuperação enviado para o seu e-mail.');
     }
-    // Add this method inside the AuthManager class
-// Em geral/js/auth.js
 
-// SUBSTITUA ESTA FUNÇÃO
 async uploadAvatar(file) {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Usuário não autenticado.');
 
     const fileExt = file.name.split('.').pop();
-    // CRIA UM NOME DE ARQUIVO ÚNICO COM UM TIMESTAMP PARA EVITAR PROBLEMAS DE CACHE
     const fileName = `avatar-${Date.now()}.${fileExt}`; 
-    // CORREÇÃO: O CAMINHO AGORA INCLUI UMA PASTA COM O ID DO USUÁRIO
     const filePath = `${user.id}/${fileName}`; 
 
-    // Upload file to Supabase Storage
     const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, { upsert: true }); // 'upsert' permite substituir se já existir
+        .upload(filePath, file, { upsert: true }); 
 
     if (uploadError) {
         throw uploadError;
