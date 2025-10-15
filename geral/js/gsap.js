@@ -16,7 +16,7 @@ gsap.fromTo(".textfield",
   scale: 1,
   duration: 2,
   opacity: 1,
-  delay: 2   // aqui funciona
+  delay: 2   
 }
 );
 

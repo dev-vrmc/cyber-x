@@ -559,7 +559,7 @@ main {
 .section__login {
     position: fixed;
     width: 100%;
-    height: 108vh;
+    height: 100vh;
     pointer-events: auto;
     overflow: hidden;
     display: flex;
@@ -573,8 +573,6 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 90vw;
-    max-width: 90vw;
     border-radius: 10px;
     z-index: 1;
 }
@@ -609,7 +607,7 @@ main {
 }
 
 .information__login>h1 {
-    font-size: 50px;
+    font-size: 30px;
     margin: 0;
     font-weight: 500;
 }
@@ -618,8 +616,9 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 50px 0px;
+    padding: 30px 0px;
     transition: all 2s;
+    width: 400px;
 }
 
 .information-image:hover {
@@ -627,7 +626,7 @@ main {
 }
 
 .line__hr {
-    width: 800px;
+    width: 450px;
     height: 2px;
     background-color: var(--first-color-light);
     margin-bottom: 20px;
@@ -672,7 +671,7 @@ main {
 }
 
 label {
-    font-size: 15px;
+    font-size: 12px;
     text-align: left;
 }
 
@@ -681,7 +680,7 @@ label {
     padding: 20px;
     border: none;
     border-bottom: #ffffff solid 1px;
-    font-size: 14px;
+    font-size: 12px;
     background-color: transparent;
     color: var(--text-color);
     margin-bottom: 20px;
@@ -789,7 +788,7 @@ label {
     padding: 20px 0 0 50px;
     gap: 10px;
     max-width: 800px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 /* ============ HOME =========== */
@@ -1580,6 +1579,7 @@ label {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 20px;
 }
 
 .cart-item-details h4 {
@@ -1845,7 +1845,6 @@ label {
     border-bottom: none;
 }
 
-
 /* Botões de ação do pedido */
 .order-actions {
     margin-top: 1rem;
@@ -1981,6 +1980,150 @@ label {
     background: var(--first-color-alt);
     transform: translateY(-2px);
 }
+
+.switch {
+    /* switch */
+    --switch-width: 46px;
+    --switch-height: 24px;
+    --switch-bg: rgb(131, 131, 131);
+    --switch-checked-bg: #4CAF50;
+    --switch-offset: calc((var(--switch-height) - var(--circle-diameter)) / 2);
+    --switch-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+    /* circle */
+    --circle-diameter: 18px;
+    --circle-bg: #fff;
+    --circle-shadow: 1px 1px 2px rgba(146, 146, 146, 0.45);
+    --circle-checked-shadow: -1px 1px 2px rgba(163, 163, 163, 0.45);
+    --circle-transition: var(--switch-transition);
+    /* icon */
+    --icon-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+    --icon-cross-color: var(--switch-bg);
+    --icon-cross-size: 6px;
+    --icon-checkmark-color: var(--switch-checked-bg);
+    --icon-checkmark-size: 10px;
+    /* effect line */
+    --effect-width: calc(var(--circle-diameter) / 2);
+    --effect-height: calc(var(--effect-width) / 2 - 1px);
+    --effect-bg: var(--circle-bg);
+    --effect-border-radius: 1px;
+    --effect-transition: all .2s ease-in-out;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch {
+    display: flex;
+    justify-content: center;
+}
+
+.switch svg {
+    -webkit-transition: var(--icon-transition);
+    -o-transition: var(--icon-transition);
+    transition: var(--icon-transition);
+    position: absolute;
+    height: auto;
+}
+
+.switch .checkmark {
+    width: var(--icon-checkmark-size);
+    color: var(--icon-checkmark-color);
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+}
+
+.switch .cross {
+    width: var(--icon-cross-size);
+    color: var(--icon-cross-color);
+}
+
+.slider {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: var(--switch-width);
+    height: var(--switch-height);
+    background: var(--switch-bg);
+    border-radius: 999px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    -webkit-transition: var(--switch-transition);
+    -o-transition: var(--switch-transition);
+    transition: var(--switch-transition);
+    cursor: pointer;
+}
+
+.circle {
+    width: var(--circle-diameter);
+    height: var(--circle-diameter);
+    background: var(--circle-bg);
+    border-radius: inherit;
+    -webkit-box-shadow: var(--circle-shadow);
+    box-shadow: var(--circle-shadow);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: var(--circle-transition);
+    -o-transition: var(--circle-transition);
+    transition: var(--circle-transition);
+    z-index: 1;
+    position: absolute;
+    left: var(--switch-offset);
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: var(--effect-width);
+    height: var(--effect-height);
+    left: calc(var(--switch-offset) + (var(--effect-width) / 2));
+    background: var(--effect-bg);
+    border-radius: var(--effect-border-radius);
+    -webkit-transition: var(--effect-transition);
+    -o-transition: var(--effect-transition);
+    transition: var(--effect-transition);
+}
+
+/* actions */
+
+.switch input:checked+.slider {
+    background: var(--switch-checked-bg);
+}
+
+.switch input:checked+.slider .checkmark {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+}
+
+.switch input:checked+.slider .cross {
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+}
+
+.switch input:checked+.slider::before {
+    left: calc(100% - var(--effect-width) - (var(--effect-width) / 2) - var(--switch-offset));
+}
+
+.switch input:checked+.slider .circle {
+    left: calc(100% - var(--circle-diameter) - var(--switch-offset));
+    -webkit-box-shadow: var(--circle-checked-shadow);
+    box-shadow: var(--circle-checked-shadow);
+}
+
 
 /* ===================
    CONFIRM MODAL
@@ -3149,14 +3292,22 @@ label {
 
 .confirmation-icon {
     font-size: 4rem;
-    color: #2ecc71; /* Verde sucesso */
+    color: #2ecc71;
+    /* Verde sucesso */
     margin-bottom: 1rem;
     animation: pop-in 0.5s ease-out;
 }
 
 @keyframes pop-in {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .order-confirmation h2 {
@@ -3211,6 +3362,7 @@ label {
     text-align: left;
     line-height: 1.5;
 }
+
 .shipping-details p {
     margin: 0;
 }

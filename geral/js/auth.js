@@ -76,10 +76,16 @@ class AuthManager {
                 },
             },
         });
+
         if (error) {
-            showToast(error.message, 'error');
+            if (error.message.includes('User already registered')) {
+                showToast('Este e-mail já está cadastrado. Tente fazer o login.', 'error');
+            } else {
+                showToast(error.message, 'error');
+            }
             return null;
         }
+
         showToast('Cadastro realizado com sucesso! Verifique seu e-mail para confirmação.');
         return data.user;
     }
@@ -91,17 +97,20 @@ class AuthManager {
         });
 
         if (error) {
-            showToast(error.message, 'error');
+            // ✅ **LÓGICA ADICIONADA**
+            if (error.message.includes('Email not confirmed')) {
+                showToast('Por favor, confirme seu e-mail antes de fazer o login. Verifique sua caixa de entrada.', 'error');
+            } else {
+                // Para outros erros (como senha incorreta), exibe a mensagem padrão.
+                showToast('E-mail ou senha inválidos.', 'error');
+            }
             return null;
         }
 
-        // ✅ **LÓGICA ADICIONADA**
-        // Após o login, busca o perfil para obter a 'role'.
         this.currentUser = data.user;
         const profile = await this.fetchUserProfile();
 
         showToast('Login efetuado com sucesso!');
-        // Retorna um objeto contendo o usuário e seu perfil.
         return { user: data.user, profile: profile };
     }
 

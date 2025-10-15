@@ -55,6 +55,34 @@
   .nav__list {
     gap: 2.5rem;
   }
+
+
+.information__login>h1 {
+    font-size: 50px;
+}
+
+.information-image {
+    padding: 50px 0px;
+    width: 800px;
+}
+
+.line__hr {
+    width: 800px;
+}
+
+
+label {
+    font-size: 15px;
+}
+
+.input__login {
+    font-size: 14px;
+}
+
+.user {
+    margin-bottom: 20px;
+}
+
 }
 
 /* ==========================================================
@@ -746,6 +774,9 @@
   
   .cart-item-details {
     align-items: center;
+  }
+  .cart-item-details > h4 {
+    padding: 20px;
   }
 
   .cart-summary {

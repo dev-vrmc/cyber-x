@@ -247,7 +247,7 @@ function handleEdit(product) {
     form.querySelector('input[name="name"]').value = product.name;
     form.querySelector('input[name="img"]').value = product.img;
     form.querySelector('input[name="price"]').value = product.price;
-    form.querySelector('input[name="sku"]').value = product.sku || '';
+/*     form.querySelector('input[name="sku"]').value = product.sku || ''; */
     form.querySelector('input[name="brand_meta"]').value = product.brand_meta || '';
     form.querySelector('textarea[name="description"]').value = product.description || '';
     form.querySelector('input[name="installments"]').value = product.installments || '';

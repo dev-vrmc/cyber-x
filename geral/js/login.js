@@ -24,6 +24,5 @@ if (loginForm) {
                 window.location.href = 'account.html'; // 🧑‍💻 Redireciona usuário padrão
             }
         }
-        // Se o login falhar, o showToast já foi exibido dentro do authManager
     });
 }

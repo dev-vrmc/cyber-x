@@ -5,23 +5,26 @@ import { showToast } from './ui.js';
 document.addEventListener('DOMContentLoaded', () => {
     const forgetForm = document.getElementById('forgetForm');
 
-    forgetForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = forgetForm.querySelector('input[name="email"]').value;
-        
-        // Adiciona um feedback visual para o usuário
-        const submitButton = forgetForm.querySelector('button');
-        submitButton.textContent = 'Enviando...';
-        submitButton.disabled = true;
+    if (forgetForm) { // Adiciona verificação de segurança
+        forgetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = forgetForm.querySelector('input[name="email"]').value;
 
-        await authManager.resetPassword(email);
+            const submitButton = forgetForm.querySelector('button[type="submit"]');
 
-        // Mesmo que a função já mostre um toast, podemos adicionar um aqui
-        // para informar que o processo foi concluído e reativar o botão.
-        showToast('Se o e-mail estiver cadastrado, um link de recuperação será enviado.');
+            // 1. Feedback visual e desabilitação do botão
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
 
-        submitButton.textContent = 'Recuperar';
-        submitButton.disabled = false;
-        forgetForm.reset();
-    });
+            try {
+                await authManager.resetPassword(email);
+                showToast('Se o e-mail estiver cadastrado, um link de recuperação será enviado.');
+                forgetForm.reset(); // Limpa o formulário após o sucesso
+            } finally {
+                // 2. Reativa o botão e restaura o texto
+                submitButton.disabled = false;
+                submitButton.textContent = 'Recuperar';
+            }
+        });
+    }
 });
