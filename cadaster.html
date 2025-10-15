@@ -45,14 +45,24 @@
                             <label for="password">Senha:</label>
                             <div class="password-field">
                                 <input type="password" id="password" name="senha" class="input__login"
-                                    placeholder="Cyber123" autocomplete="current-password" required minlength="8">
-                                <button type="button" id="togglePassword" class="toggle-password"
+                                    placeholder="Cyber123" autocomplete="new-password" required minlength="8">
+                                <button type="button" class="toggle-password"
+                                    aria-label="Mostrar ou ocultar senha">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            </div>
+                            <label for="confirmPassword">Confirme a Senha:</label>
+                            <div class="password-field">
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="input__login"
+                                    placeholder="Repita sua senha" autocomplete="new-password" required minlength="8">
+                                <button type="button" class="toggle-password"
                                     aria-label="Mostrar ou ocultar senha">
                                     <i class="ri-eye-line"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="button__login"> <button type="submit" class="button">Cadastrar</button>
+                        <div class="button__login">
+                             <button type="submit" id="cadasterButton" class="button">Cadastrar</button>
                         </div>
                     </form>
                     <div class="other-user" style="padding: 0px; padding-top: 20px;">
@@ -67,21 +77,22 @@
 
     </section>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="geral/js/supabase.js"></script>
-    <script src="geral/js/ui.js"></script>
-    <script src="geral/js/auth.js"></script>
+    <script type="module" src="geral/js/supabase.js"></script>
+    <script type="module" src="geral/js/ui.js"></script>
+    <script type="module" src="geral/js/auth.js"></script>
     <script type="module" src="geral/js/cadaster.js"></script>
     <script>
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-
-        togglePassword.addEventListener('click', () => {
-            const isPassword = passwordInput.type === 'password';
-            passwordInput.type = isPassword ? 'text' : 'password';
-            togglePassword.innerHTML = isPassword
-                ? '<i class="ri-eye-off-line"></i>'
-                : '<i class="ri-eye-line"></i>';
-        })
+        // SCRIPT MODIFICADO PARA FUNCIONAR COM MÚLTIPLOS CAMPOS DE SENHA
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', () => {
+                const passwordInput = button.previousElementSibling;
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                button.innerHTML = isPassword
+                    ? '<i class="ri-eye-off-line"></i>'
+                    : '<i class="ri-eye-line"></i>';
+            });
+        });
     </script>
 </body>
 
