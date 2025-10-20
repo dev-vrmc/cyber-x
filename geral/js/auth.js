@@ -78,18 +78,18 @@ class AuthManager {
         });
 
         if (error) {
-            if (error.message.includes('User already registered')) {
+            if (error.message.toLowerCase().includes('already registered')) {
                 showToast('Este e-mail já está cadastrado. Tente fazer o login.', 'error');
             } else {
                 showToast(error.message, 'error');
             }
-            return null;
+            return null; // Retorna nulo, o cadaster.js vai parar o loader
         }
 
+        // Se não deu erro, o usuário foi criado.
         showToast('Cadastro realizado com sucesso! Verifique seu e-mail para confirmação.');
         return data.user;
     }
-
     async login(email, password) {
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
@@ -97,12 +97,15 @@ class AuthManager {
         });
 
         if (error) {
-            // ✅ **LÓGICA ADICIONADA**
+            // ✅ **LÓGICA ATUALIZADA**
             if (error.message.includes('Email not confirmed')) {
                 showToast('Por favor, confirme seu e-mail antes de fazer o login. Verifique sua caixa de entrada.', 'error');
+            } else if (error.message.includes('Invalid login credentials')) {
+                // Mensagem solicitada, que cobre tanto e-mail não encontrado quanto senha errada.
+                showToast('Credenciais inválidas.', 'error');
             } else {
-                // Para outros erros (como senha incorreta), exibe a mensagem padrão.
-                showToast('E-mail ou senha inválidos.', 'error');
+                // Para outros erros
+                showToast(error.message, 'error');
             }
             return null;
         }
@@ -122,15 +125,15 @@ class AuthManager {
 
     async resetPassword(email) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            // ✅ A URL deve apontar para a sua página de redefinição de senha
             redirectTo: `${window.location.origin}/password-reset.html`,
         });
 
         if (error) {
             showToast(error.message, 'error');
-            return;
+            return false;
         }
-        showToast('Link de recuperação enviado para o seu e-mail.');
+
+        return true; // ✅ **MODIFICADO: Retorna 'true' em caso de sucesso
     }
 
     async uploadAvatar(file) {
