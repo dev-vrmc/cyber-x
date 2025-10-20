@@ -13,6 +13,9 @@
 </head>
 
 <body>
+  <div id="loader-overlay">
+    <div class="loader-spinner"></div>
+  </div>
   <header class="header">
     <nav class="nav__subcontainer">
       <a href="index.html" class="nav__logo">
@@ -106,21 +109,21 @@
         <h1>Seu Carrinho</h1>
         <div id="cart-items"></div>
         <div class="cart-summary">
-        <div class="shipping-calc-container">
-          <div class="shipping-calc">
-            <input type="text" id="shipping-cep-input" placeholder="Calcular frete (CEP)">
-            <button id="calc-shipping-btn" class="button">OK</button>
+          <div class="shipping-calc-container">
+            <div class="shipping-calc">
+              <input type="text" id="shipping-cep-input" placeholder="Calcular frete (CEP)">
+              <button id="calc-shipping-btn" class="button">OK</button>
+            </div>
+            <div id="shipping-result-container"></div>
           </div>
-          <div id="shipping-result-container"></div>
-        </div>
-        <div class="totals-container">
-          <p>Subtotal: <span id="cart-subtotal">R$ 0,00</span></p>
-          <p>Frete: <span id="cart-shipping">R$ 0,00</span></p>
-          <p class="grand-total">Total: <span id="cart-total">R$ 0,00</span></p>
+          <div class="totals-container">
+            <p>Subtotal: <span id="cart-subtotal">R$ 0,00</span></p>
+            <p>Frete: <span id="cart-shipping">R$ 0,00</span></p>
+            <p class="grand-total">Total: <span id="cart-total">R$ 0,00</span></p>
 
-          <button id="checkout-btn" class="button">Finalizar Compra</button>
+            <button id="checkout-btn" class="button">Finalizar Compra</button>
+          </div>
         </div>
-      </div>
       </div>
     </section>
   </main>
@@ -203,13 +206,16 @@
     <i class="ri-arrow-up-line"></i>
   </a>
 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="geral/js/gsap.js"></script>
   <script type="module" src="geral/js/supabase.js"></script>
   <script type="module" src="geral/js/auth.js"></script>
   <script type="module" src="geral/js/ui.js"></script>
   <script type="module" src="geral/js/cart.js"></script>
   <script type="module" src="geral/js/products.js"></script>
   <script type="module" src="geral/js/main.js"></script>
-<script type="module">
+  <script type="module">
     import { cart } from './geral/js/cart.js';
     import { authManager } from './geral/js/auth.js';
     import { orderManager } from './geral/js/order.js';
@@ -217,20 +223,20 @@
 
     // NOVO: Função que calcula o frete com base no estado (UF)
     function getShippingCostByState(state) {
-        const regioes = {
-            centroOeste: { states: ['DF', 'GO', 'MT', 'MS'], price: 18.50 },
-            sudeste:     { states: ['SP', 'RJ', 'ES', 'MG'], price: 24.90 },
-            sul:         { states: ['PR', 'SC', 'RS'], price: 28.00 },
-            nordeste:    { states: ['BA', 'SE', 'AL', 'PE', 'PB', 'RN', 'CE', 'PI', 'MA'], price: 35.70 },
-            norte:       { states: ['AM', 'RR', 'AP', 'PA', 'TO', 'RO', 'AC'], price: 45.90 }
-        };
+      const regioes = {
+        centroOeste: { states: ['DF', 'GO', 'MT', 'MS'], price: 18.50 },
+        sudeste: { states: ['SP', 'RJ', 'ES', 'MG'], price: 24.90 },
+        sul: { states: ['PR', 'SC', 'RS'], price: 28.00 },
+        nordeste: { states: ['BA', 'SE', 'AL', 'PE', 'PB', 'RN', 'CE', 'PI', 'MA'], price: 35.70 },
+        norte: { states: ['AM', 'RR', 'AP', 'PA', 'TO', 'RO', 'AC'], price: 45.90 }
+      };
 
-        for (const regiao in regioes) {
-            if (regioes[regiao].states.includes(state.toUpperCase())) {
-                return regioes[regiao].price;
-            }
+      for (const regiao in regioes) {
+        if (regioes[regiao].states.includes(state.toUpperCase())) {
+          return regioes[regiao].price;
         }
-        return 30.00; // Valor padrão caso o estado não seja encontrado
+      }
+      return 30.00; // Valor padrão caso o estado não seja encontrado
     }
 
     function generateWhatsAppMessage(order, cartItems, userProfile, shippingInfo) {
@@ -261,16 +267,16 @@ Obrigado!
         `;
       return message.trim();
     }
-    
+
     function renderShippingDetails() {
-        // ... esta função continua exatamente igual, sem alterações ...
-        const shippingContainer = document.getElementById('shipping-result-container');
-        const savedShipping = JSON.parse(sessionStorage.getItem('shippingInfo'));
-        if (savedShipping && savedShipping.address && shippingContainer) {
-            shippingContainer.innerHTML = `<div class="shipping-details"><p><strong>Endereço de Entrega (CEP: ${savedShipping.cep}):</strong></p><p>${savedShipping.address.logradouro}, ${savedShipping.address.bairro} - ${savedShipping.address.localidade}/${savedShipping.address.uf}</p></div>`;
-        } else {
-            shippingContainer.innerHTML = '';
-        }
+      // ... esta função continua exatamente igual, sem alterações ...
+      const shippingContainer = document.getElementById('shipping-result-container');
+      const savedShipping = JSON.parse(sessionStorage.getItem('shippingInfo'));
+      if (savedShipping && savedShipping.address && shippingContainer) {
+        shippingContainer.innerHTML = `<div class="shipping-details"><p><strong>Endereço de Entrega (CEP: ${savedShipping.cep}):</strong></p><p>${savedShipping.address.logradouro}, ${savedShipping.address.bairro} - ${savedShipping.address.localidade}/${savedShipping.address.uf}</p></div>`;
+      } else {
+        shippingContainer.innerHTML = '';
+      }
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -289,7 +295,7 @@ Obrigado!
       if (userProfileForCep && userProfileForCep.address_zipcode) {
         shippingCepInput.value = userProfileForCep.address_zipcode;
       }
-      
+
       // --- Lógica de add/remover do carrinho (sem alterações) ---
       cartItemsContainer.addEventListener('click', (e) => {
         const target = e.target;
@@ -308,9 +314,9 @@ Obrigado!
       });
       cartItemsContainer.addEventListener('change', (e) => {
         if (e.target.classList.contains('cart-item-quantity')) {
-            const id = parseInt(e.target.dataset.id, 10);
-            const quantity = parseInt(e.target.value, 10);
-            cart.updateQuantity(id, quantity);
+          const id = parseInt(e.target.dataset.id, 10);
+          const quantity = parseInt(e.target.value, 10);
+          cart.updateQuantity(id, quantity);
         }
       });
       // --- Fim da Lógica de add/remover ---
@@ -343,8 +349,8 @@ Obrigado!
 
           // Verifica se o cliente ganhou frete grátis
           if (subtotal >= freeShippingThreshold) {
-              shippingPrice = 0;
-              toastMessage = 'Parabéns! Você ganhou frete grátis!';
+            shippingPrice = 0;
+            toastMessage = 'Parabéns! Você ganhou frete grátis!';
           }
           // --- FIM DA LÓGICA ---
 
@@ -379,7 +385,7 @@ Obrigado!
         if (!sessionStorage.getItem('shippingInfo')) { showToast('Por favor, calcule o frete antes de finalizar.', 'error'); hideLoader(); return; }
         const userProfile = await authManager.fetchUserProfile();
         if (!userProfile.address_street || !userProfile.address_zipcode) { showToast('Por favor, complete seu endereço em "Minha Conta".', 'error'); hideLoader(); return; }
-        
+
         document.getElementById('modal-user-name').textContent = userProfile.full_name;
         document.getElementById('modal-user-phone').textContent = userProfile.phone;
         document.getElementById('modal-user-address').innerHTML = `${userProfile.address_street}, Nº ${userProfile.address_number} <br>${userProfile.address_neighborhood} - ${userProfile.address_city}/${userProfile.address_state}`;
@@ -417,7 +423,7 @@ Obrigado!
       });
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
     });
-</script>
+  </script>
 </body>
 
 </html>

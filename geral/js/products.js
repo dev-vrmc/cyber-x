@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { showLoader, hideLoader, showToast } from './ui.js'; // <-- Importa os loaders e showToast
 
 // Função para embaralhar um array (usada para produtos aleatórios)
 function shuffleArray(array) {
@@ -10,78 +11,107 @@ function shuffleArray(array) {
 }
 
 class ProductManager {
-async getProducts(options = {}) {
-    let query = supabase.from('products').select(`*, category:categories(*)`);
+    async getProducts(options = {}) {
+        showLoader(); // <-- ADICIONADO
+        try {
+            let query = supabase.from('products').select(`*, category:categories(*)`);
 
-    if (options.categorySlug) {
-        const { data: categoryData } = await supabase.from('categories').select('id').eq('slug', options.categorySlug).single();
-        if (categoryData) query = query.eq('category_id', categoryData.id);
+            if (options.categorySlug) {
+                const { data: categoryData } = await supabase.from('categories').select('id').eq('slug', options.categorySlug).single();
+                if (categoryData) query = query.eq('category_id', categoryData.id);
+            }
+
+            if (options.minPrice) query = query.gte('price', options.minPrice);
+            if (options.maxPrice) query = query.lte('price', options.maxPrice);
+            
+            if (options.featured !== undefined) {
+                query = query.eq('featured', options.featured);
+            }
+
+            if (options.sortBy) {
+                const [column, order] = options.sortBy.split('-');
+                query = query.order(column, { ascending: order === 'asc' });
+            } else {
+                query = query.order('created_at', { ascending: false });
+            }
+
+            const { data, error } = await query;
+            if (error) {
+                console.error('Error fetching products:', error);
+                return [];
+            }
+
+            if (options.random) {
+                return shuffleArray(data).slice(0, options.limit || 6);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in getProducts:', err);
+            return [];
+        } finally {
+            hideLoader(); // <-- ADICIONADO
+        }
     }
-
-    if (options.minPrice) query = query.gte('price', options.minPrice);
-    if (options.maxPrice) query = query.lte('price', options.maxPrice);
-    
-    // **NOVO FILTRO FEATURED**
-    if (options.featured !== undefined) {
-        query = query.eq('featured', options.featured);
-    }
-
-    if (options.sortBy) {
-        const [column, order] = options.sortBy.split('-');
-        query = query.order(column, { ascending: order === 'asc' });
-    } else {
-        query = query.order('created_at', { ascending: false });
-    }
-
-    const { data, error } = await query;
-    if (error) {
-        console.error('Error fetching products:', error);
-        return [];
-    }
-
-    if (options.random) {
-        return shuffleArray(data).slice(0, options.limit || 6);
-    }
-
-    return data;
-}
 
     async getProductById(id) {
-        const { data, error } = await supabase
-            .from('products')
-            .select('*, category:categories(*)') // MODIFICADO para incluir dados da categoria
-            .eq('id', id)
-            .single();
+        showLoader(); // <-- ADICIONADO
+        try {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*, category:categories(*)')
+                .eq('id', id)
+                .single();
 
-        if (error) {
-            console.error('Error fetching product:', error);
+            if (error) {
+                console.error('Error fetching product:', error);
+                return null;
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in getProductById:', err);
             return null;
+        } finally {
+            hideLoader(); // <-- ADICIONADO
         }
-        return data;
     }
     
-    // NOVO: Método para deletar um produto
     async deleteProduct(productId) {
-        const { error } = await supabase.from('products').delete().eq('id', productId);
-        if (error) {
-            showToast(`Erro ao remover produto: ${error.message}`, 'error');
+        showLoader(); // <-- ADICIONADO
+        try {
+            const { error } = await supabase.from('products').delete().eq('id', productId);
+            if (error) {
+                showToast(`Erro ao remover produto: ${error.message}`, 'error');
+                return false;
+            }
+            showToast('Produto removido com sucesso!');
+            return true;
+        } catch (err) {
+            showToast(`Erro: ${err.message}`, 'error');
             return false;
+        } finally {
+            hideLoader(); // <-- ADICIONADO
         }
-        showToast('Produto removido com sucesso!');
-        return true;
     }
 
     async searchProducts(searchTerm) {
-        const { data, error } = await supabase
-            .from('products')
-            .select('*')
-            .ilike('name', `%${searchTerm}%`); // Case-insensitive search
+        showLoader(); // <-- ADICIONADO
+        try {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .ilike('name', `%${searchTerm}%`); // Case-insensitive search
 
-        if (error) {
-            console.error('Error searching products:', error);
+            if (error) {
+                console.error('Error searching products:', error);
+                return [];
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in searchProducts:', err);
             return [];
+        } finally {
+            hideLoader(); // <-- ADICIONADO
         }
-        return data;
     }
 }
 

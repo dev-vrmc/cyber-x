@@ -5,7 +5,7 @@ import { productManager } from './products.js';
 import { cart } from './cart.js';
 import { renderProducts, showToast, showLoader, hideLoader } from './ui.js';
 import { authManager } from './auth.js';
-import { wishlistManager } from './wishlist.js'; // Importa o wishlistManager
+import { wishlistManager } from './wishlist.js';
 
 // ===============================================
 // INÍCIO DAS MODIFICAÇÕES
@@ -109,6 +109,7 @@ async function calculateShipping() {
         return;
     }
 
+    showLoader(); // <-- ADICIONADO
     try {
         const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
         const data = await response.json();
@@ -134,6 +135,8 @@ async function calculateShipping() {
 
     } catch (error) {
         showToast('Não foi possível calcular o frete.', 'error');
+    } finally {
+        hideLoader(); // <-- ADICIONADO
     }
 }
 
@@ -147,169 +150,180 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const product = await productManager.getProductById(productId);
+    showLoader(); // <-- ADICIONADO (Loader principal da página)
 
-    if (!product) {
-        document.querySelector('.product-detail').innerHTML = '<h1>Produto não encontrado.</h1>';
-        return;
-    }
+    try {
+        const product = await productManager.getProductById(productId);
 
-    // ===============================================
-    // INÍCIO DA MODIFICAÇÃO
-    // ===============================================
-    // Chama a função para renderizar a nota e as estrelas
-    renderRating(product);
-    // ===============================================
-    // FIM DA MODIFICAÇÃO
-    // ===============================================
+        if (!product) {
+            document.querySelector('.product-detail').innerHTML = '<h1>Produto não encontrado.</h1>';
+            return;
+        }
+        
+        renderRating(product); //
 
-    // Preenche a página com as informações do produto
-    document.title = `${product.name} • Cyber X`;
-    document.getElementById('productImg').src = product.img || 'geral/img/placeholder.png';
-    document.getElementById('brandMeta').textContent = product.brand_meta || 'Marca não informada';
-    document.getElementById('sku').textContent = `SKU: ${product.sku || 'N/A'}`;
-    document.getElementById('title').textContent = product.name;
-    document.getElementById('desc').textContent = product.description;
-    document.getElementById('price').textContent =
-        `R$ ${Number(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-    document.getElementById('installments').textContent = product.installments || '';
-    document.getElementById('stock').textContent = `Estoque: ${product.stock || 0}`;
-    buyBtn.addEventListener('click', () => cart.addToCart(product));
-    document.getElementById('cepBtn').addEventListener('click', calculateShipping);
+        // Preenche a página com as informações do produto
+        document.title = `${product.name} • Cyber X`;
+        document.getElementById('productImg').src = product.img || 'geral/img/placeholder.png';
+        document.getElementById('brandMeta').textContent = product.brand_meta || 'Marca não informada';
+        document.getElementById('sku').textContent = `SKU: ${product.sku || 'N/A'}`;
+        document.getElementById('title').textContent = product.name;
+        document.getElementById('desc').textContent = product.description;
+        document.getElementById('price').textContent =
+            `R$ ${Number(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        document.getElementById('installments').textContent = product.installments || '';
+        document.getElementById('stock').textContent = `Estoque: ${product.stock || 0}`;
+        buyBtn.addEventListener('click', () => cart.addToCart(product));
+        document.getElementById('cepBtn').addEventListener('click', calculateShipping);
 
-    // MODIFICADO: Lógica para produtos relacionados (aleatórios da mesma categoria)
-    if (product.category && product.category.slug) {
-        const relatedProducts = await productManager.getProducts({
-            categorySlug: product.category.slug,
-            random: true, // Pede resultados aleatórios
-            limit: 6 // Pede 6 resultados
-        });
-        const filteredRelated = relatedProducts.filter(p => p.id != productId);
-        renderProducts(filteredRelated, 'relatedProducts');
-    }
-
-    // --- LÓGICA DE AVALIAÇÕES E WISHLIST ---
-    await fetchAndRenderReviews(productId);
-    const user = await authManager.getCurrentUser();
-    const reviewForm = document.getElementById('review-form');
-    const reviewNotice = document.getElementById('review-login-notice');
-    const wishlistBtn = document.getElementById('wishlist-btn');
-
-    if (user) {
-        reviewForm.style.display = 'flex';
-        reviewNotice.style.display = 'none';
-
-        // Checa se o item já está na wishlist e atualiza o ícone
-        const isWishlisted = await wishlistManager.isWishlisted(productId);
-        if (isWishlisted) {
-            wishlistBtn.classList.add('active', 'ri-heart-fill');
-            wishlistBtn.classList.remove('ri-heart-line');
+        // MODIFICADO: Lógica para produtos relacionados (aleatórios da mesma categoria)
+        if (product.category && product.category.slug) {
+            const relatedProducts = await productManager.getProducts({ //
+                categorySlug: product.category.slug,
+                random: true, // Pede resultados aleatórios
+                limit: 6 // Pede 6 resultados
+            });
+            const filteredRelated = relatedProducts.filter(p => p.id != productId);
+            renderProducts(filteredRelated, 'relatedProducts');
         }
 
-        // Adicione um listener para o input de arquivos para mostrar o preview
-        const imageUploadInput = document.getElementById('review-images-upload');
-        const imagePreviewContainer = document.getElementById('review-images-preview');
+        // --- LÓGICA DE AVALIAÇÕES E WISHLIST ---
+        await fetchAndRenderReviews(productId); //
+        const user = await authManager.getCurrentUser();
+        const reviewForm = document.getElementById('review-form');
+        const reviewNotice = document.getElementById('review-login-notice');
+        const wishlistBtn = document.getElementById('wishlist-btn');
 
-        imageUploadInput.addEventListener('change', () => {
-            imagePreviewContainer.innerHTML = ''; // Limpa previews antigos
-            const files = Array.from(imageUploadInput.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const img = document.createElement('img');
-                    img.src = reader.result;
-                    img.classList.add('review-image-preview');
-                    imagePreviewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
+        if (user) {
+            reviewForm.style.display = 'flex';
+            reviewNotice.style.display = 'none';
+
+            // Checa se o item já está na wishlist e atualiza o ícone
+            const isWishlisted = await wishlistManager.isWishlisted(productId);
+            if (isWishlisted) {
+                wishlistBtn.classList.add('active', 'ri-heart-fill');
+                wishlistBtn.classList.remove('ri-heart-line');
+            }
+
+            // Adicione um listener para o input de arquivos para mostrar o preview
+            const imageUploadInput = document.getElementById('review-images-upload');
+            const imagePreviewContainer = document.getElementById('review-images-preview');
+
+            imageUploadInput.addEventListener('change', () => {
+                imagePreviewContainer.innerHTML = ''; // Limpa previews antigos
+                const files = Array.from(imageUploadInput.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const img = document.createElement('img');
+                        img.src = reader.result;
+                        img.classList.add('review-image-preview');
+                        imagePreviewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
             });
-        });
 
-        reviewForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = await authManager.getCurrentUser(); // Garante que temos o usuário
-            if (!user) return;
+            // ESTE BLOCO JÁ ESTAVA CORRETO!
+            reviewForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const user = await authManager.getCurrentUser();
+                if (!user) return;
 
-            showLoader();
+                showLoader();
 
-            const ratingInput = reviewForm.querySelector('input[name="rating"]:checked');
-            if (!ratingInput) {
-                showToast('Por favor, selecione uma nota de 1 a 5 estrelas.', 'error');
-                hideLoader();
-                return;
-            }
+                const ratingInput = reviewForm.querySelector('input[name="rating"]:checked');
+                if (!ratingInput) {
+                    showToast('Por favor, selecione uma nota de 1 a 5 estrelas.', 'error');
+                    hideLoader();
+                    return;
+                }
 
-            const rating = ratingInput.value;
-            const comment = document.getElementById('review-comment').value;
-            const files = document.getElementById('review-images-upload').files;
-            const imageUrls = [];
+                const rating = ratingInput.value;
+                const comment = document.getElementById('review-comment').value;
+                const files = document.getElementById('review-images-upload').files;
+                const imageUrls = [];
 
-            try {
-                // Faz o upload de todas as imagens em paralelo
-                const uploadPromises = Array.from(files).map(async (file) => {
-                    const fileName = `${user.id}/${productId}/${Date.now()}-${file.name}`;
-                    const { error: uploadError } = await supabase.storage
-                        .from('review-images')
-                        .upload(fileName, file);
+                try {
+                    // Faz o upload de todas as imagens em paralelo
+                    const uploadPromises = Array.from(files).map(async (file) => {
+                        const fileName = `${user.id}/${productId}/${Date.now()}-${file.name}`;
+                        const { error: uploadError } = await supabase.storage
+                            .from('review-images')
+                            .upload(fileName, file);
 
-                    if (uploadError) {
-                        throw new Error(`Falha no upload de ${file.name}: ${uploadError.message}`);
+                        if (uploadError) {
+                            throw new Error(`Falha no upload de ${file.name}: ${uploadError.message}`);
+                        }
+
+                        const { data } = supabase.storage.from('review-images').getPublicUrl(fileName);
+                        return data.publicUrl;
+                    });
+
+                    // Espera todas as promessas de upload terminarem
+                    const uploadedUrls = await Promise.all(uploadPromises);
+                    imageUrls.push(...uploadedUrls);
+
+                    // Insere a avaliação no banco de dados
+                    const { error: insertError } = await supabase.from('reviews').insert({
+                        product_id: productId,
+                        user_id: user.id,
+                        rating,
+                        comment,
+                        image_urls: imageUrls.length > 0 ? imageUrls : null,
+                    });
+
+                    if (insertError) throw insertError;
+
+                    showToast('Avaliação enviada com sucesso!');
+                    reviewForm.reset();
+                    document.getElementById('review-images-preview').innerHTML = '';
+                    await fetchAndRenderReviews(productId); // Re-renderiza as avaliações
+
+                    // Re-busca o produto para atualizar a nota média na tela
+                    const updatedProduct = await productManager.getProductById(productId);
+                    if (updatedProduct) renderRating(updatedProduct);
+
+                } catch (error) {
+                    showToast(`Erro: ${error.message}`, 'error');
+                } finally {
+                    hideLoader();
+                }
+            });
+            
+            // Loader para o botão de Wishlist
+            wishlistBtn.addEventListener('click', async () => {
+                showLoader(); // <-- ADICIONADO
+                try {
+                    const isCurrentlyWishlisted = wishlistBtn.classList.contains('active');
+                    const success = isCurrentlyWishlisted
+                        ? await wishlistManager.removeFromWishlist(productId)
+                        : await wishlistManager.addToWishlist(productId);
+
+                    if (success) {
+                        wishlistBtn.classList.toggle('active');
+                        wishlistBtn.classList.toggle('ri-heart-fill');
+                        wishlistBtn.classList.toggle('ri-heart-line');
                     }
+                } catch (error) {
+                    showToast('Erro ao atualizar wishlist.', 'error');
+                } finally {
+                    hideLoader(); // <-- ADICIONADO
+                }
+            });
 
-                    const { data } = supabase.storage.from('review-images').getPublicUrl(fileName);
-                    return data.publicUrl;
-                });
-
-                // Espera todas as promessas de upload terminarem
-                const uploadedUrls = await Promise.all(uploadPromises);
-                imageUrls.push(...uploadedUrls);
-
-                // Insere a avaliação no banco de dados
-                const { error: insertError } = await supabase.from('reviews').insert({
-                    product_id: productId,
-                    user_id: user.id,
-                    rating,
-                    comment,
-                    image_urls: imageUrls.length > 0 ? imageUrls : null,
-                });
-
-                if (insertError) throw insertError;
-
-                showToast('Avaliação enviada com sucesso!');
-                reviewForm.reset();
-                document.getElementById('review-images-preview').innerHTML = '';
-                await fetchAndRenderReviews(productId); // Re-renderiza as avaliações
-
-                // Re-busca o produto para atualizar a nota média na tela
-                const updatedProduct = await productManager.getProductById(productId);
-                if (updatedProduct) renderRating(updatedProduct);
-
-            } catch (error) {
-                showToast(`Erro: ${error.message}`, 'error');
-            } finally {
-                hideLoader();
-            }
-        });
-
-        wishlistBtn.addEventListener('click', async () => {
-            const isCurrentlyWishlisted = wishlistBtn.classList.contains('active');
-            const success = isCurrentlyWishlisted
-                ? await wishlistManager.removeFromWishlist(productId)
-                : await wishlistManager.addToWishlist(productId);
-
-            if (success) {
-                wishlistBtn.classList.toggle('active');
-                wishlistBtn.classList.toggle('ri-heart-fill');
-                wishlistBtn.classList.toggle('ri-heart-line');
-            }
-        });
-
-    } else {
-        reviewForm.style.display = 'none';
-        reviewNotice.style.display = 'block';
-        wishlistBtn.addEventListener('click', () => {
-            showToast('Você precisa estar logado para adicionar à wishlist.', 'error');
-            window.location.href = 'login.html';
-        });
+        } else {
+            reviewForm.style.display = 'none';
+            reviewNotice.style.display = 'block';
+            wishlistBtn.addEventListener('click', () => {
+                showToast('Você precisa estar logado para adicionar à wishlist.', 'error');
+                window.location.href = 'login.html';
+            });
+        }
+    } catch (error) {
+        console.error("Erro ao carregar a página do produto:", error);
+        document.querySelector('.product-detail').innerHTML = '<h1>Erro ao carregar produto.</h1>';
+    } finally {
+        hideLoader(); // <-- ADICIONADO (Loader principal da página)
     }
 });

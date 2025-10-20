@@ -1,7 +1,7 @@
 // Arquivo: geral/js/category-filter.js
 
 import { productManager } from './products.js';
-import { renderProducts } from './ui.js';
+import { renderProducts, showLoader, hideLoader } from './ui.js'; // <-- Importa os loaders
 
 // Função principal para carregar produtos com base nos filtros da página
 async function loadCategoryProducts() {
@@ -10,23 +10,32 @@ async function loadCategoryProducts() {
     
     if (!container || !filtersForm) return;
 
-    // Pega a categoria principal da página a partir do atributo data-category
-    const mainCategorySlug = container.dataset.category;
-
-    // Pega valores dos filtros
-    const minPrice = filtersForm.querySelector('#min-price').value;
-    const maxPrice = filtersForm.querySelector('#max-price').value;
-    const sortBy = filtersForm.querySelector('#sort-by').value;
-
-    const options = {
-        categorySlug: mainCategorySlug,
-        minPrice: minPrice ? parseFloat(minPrice) : null,
-        maxPrice: maxPrice ? parseFloat(maxPrice) : null,
-        sortBy: sortBy,
-    };
+    showLoader(); // <-- ADICIONADO
     
-    const products = await productManager.getProducts(options);
-    renderProducts(products, container.id);
+    try {
+        // Pega a categoria principal da página
+        const mainCategorySlug = container.dataset.category;
+
+        // Pega valores dos filtros
+        const minPrice = filtersForm.querySelector('#min-price').value;
+        const maxPrice = filtersForm.querySelector('#max-price').value;
+        const sortBy = filtersForm.querySelector('#sort-by').value;
+
+        const options = {
+            categorySlug: mainCategorySlug,
+            minPrice: minPrice ? parseFloat(minPrice) : null,
+            maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+            sortBy: sortBy,
+        };
+        
+        const products = await productManager.getProducts(options); //
+        renderProducts(products, container.id);
+
+    } catch (error) {
+        console.error("Erro ao carregar produtos da categoria:", error);
+    } finally {
+        hideLoader(); // <-- ADICIONADO
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtersForm) {
         // Recarrega os produtos sempre que o formulário de filtro é enviado
         filtersForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Impede o recarregamento da página
+            e.preventDefault();
             loadCategoryProducts();
         });
     }

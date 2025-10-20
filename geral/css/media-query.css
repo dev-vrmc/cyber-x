@@ -110,15 +110,16 @@
   .information__login>h1 {
     font-size: 24px;
   }
-  
+
   .input__login {
-    padding: 12px 18px; 
+    padding: 12px 18px;
     font-size: 14px;
     margin-bottom: 15px;
   }
 
   .password-field {
-    flex-direction: column; /* evita o botão de toggle subir */
+    flex-direction: column;
+    /* evita o botão de toggle subir */
   }
 
   .toggle-password {
@@ -132,16 +133,19 @@
   .other-user {
     font-size: 12px;
   }
+
   .button {
     padding: 12px;
     font-size: 12px;
   }
+
   label {
     font-size: 12px;
   }
+
   .input__login::placeholder {
     font-size: 12px;
-}
+  }
 }
 
 
@@ -506,6 +510,22 @@
     font-size: 0.9rem;
   }
 
+  .account-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group-half {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-group-cep {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
   .cart-item {
     flex-direction: column;
     align-items: center;
@@ -863,5 +883,92 @@
   #checkout-btn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+
+
+/* ==========================================================
+   ADMIN DASHBOARD RESPONSIVO
+   ========================================================== */
+
+@media (max-width: 767px) {
+
+  .admin-dashboard-layout {
+    margin-top: 112px;
+  }
+}
+
+@media (max-width: 1024px) {
+
+
+  .admin-dashboard-layout {
+    grid-template-columns: 200px 1fr;
+    margin-top: 140px;
+  }
+
+  .admin-sidebar {
+    padding: 1rem 0.5rem;
+  }
+
+  .admin-sidebar-logo {
+    display: none;
+  }
+
+  .admin-sidebar-link {
+    justify-content: center;
+    padding: 0.8rem;
+  }
+
+  .admin-sidebar-link span {
+    display: none;
+  }
+
+  .admin-sidebar-link i {
+    font-size: 1.5rem;
+  }
+
+  .admin-content {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard-layout {
+    display: flex;
+    flex-direction: column;
+    margin-top: 150px;
+  }
+
+  .admin-sidebar {
+    position: static;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--shadow-color);
+    padding: 0.5rem;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .admin-sidebar-logo {
+    display: none;
+  }
+
+  .admin-sidebar-nav ul {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .admin-sidebar-link {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .admin-sidebar-link i {
+    font-size: 1.25rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
   }
 }

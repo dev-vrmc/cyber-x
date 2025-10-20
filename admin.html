@@ -10,10 +10,13 @@
   <link rel="stylesheet" href="geral/css/media-query.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
 </head>
 
 <body>
+  <div id="loader-overlay">
+    <div class="loader-spinner"></div>
+  </div>
+
   <header class="header">
     <nav class="nav__subcontainer">
       <a href="index.html" class="nav__logo">
@@ -87,94 +90,158 @@
     <div class="progress-bar"></div>
   </header>
 
-  <main class="admin__main">
-    <!-- PEDIDOS -->
-    <section>
-      <h1>📦 Pedidos</h1>
-      <div id="adminOrders" class="admin__orders"></div>
-    </section>
+  <div class="admin-dashboard-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-logo">
+        <img src="geral/img/logo/simbolo.png" alt="Cyber X" />
+        <span>Painel Admin</span>
+      </div>
+      <nav class="admin-sidebar-nav">
+        <ul>
+          <li>
+            <a href="#" class="admin-sidebar-link active" data-target="#admin-dashboard-stats-section">
+              <i class="ri-dashboard-line"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="admin-sidebar-link" data-target="#admin-orders-section">
+              <i class="ri-archive-line"></i>
+              <span>Pedidos</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="admin-sidebar-link" data-target="#admin-products-section">
+              <i class="ri-store-2-line"></i>
+              <span>Produtos</span>
+            </a>
+          </li>
+          <li>
+            <a href="index.html" class="admin-sidebar-link">
+              <i class="ri-arrow-go-back-line"></i>
+              <span>Voltar ao Site</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
 
-    <!-- PRODUTOS -->
-    <section>
-      <h1 id="product-form-title">➕ Adicionar Novo Produto</h1>
-      <form id="adminAddProduct" class="admin__form">
-        <input type="hidden" name="id">
+    <main class="admin-content">
 
-        <label>Nome</label>
-        <input type="text" name="name" placeholder="Oneplus 15" required>
-
-        <label>Imagem (URL)</label>
-        <input type="url" name="img" placeholder="https://i.postimg.cc/C1xr9z6t/Oneplus-15-design-Photoroom-1.png" required>
-
-        <label>Preço (R$)</label>
-        <input name="price" type="number" step="0.01" placeholder="1299990" required>
-
-        <label>Marca / Meta</label>
-        <input name="brand_meta">
-
-        <label>Descrição</label>
-        <textarea name="description"></textarea>
-
-        <label>Parcelas</label>
-        <input name="installments">
-
-        <label>Estoque</label>
-        <input name="stock" type="number">
-
-        <label>Categoria</label>
-        <select name="category" required>
-          <option value="">-- Escolha --</option>
-          <option value="hardware">Hardware</option>
-          <option value="perifericos">Periféricos</option>
-          <option value="monitores">Monitores</option>
-          <option value="computadores">Computadores</option>
-          <option value="cadeiras">Cadeiras</option>
-          <option value="celulares">Celulares</option>
-        </select>
-
-        <label>Produto em destaque</label>
-        <label class="switch">
-          <input checked="" type="checkbox" name="featured" id="product-featured">
-          <div class="slider">
-            <div class="circle">
-              <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
-                viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
-                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <g>
-                  <path data-original="#000000" fill="currentColor"
-                    d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
-                  </path>
-                </g>
-              </svg>
-              <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24"
-                y="0" x="0" height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                <g>
-                  <path class="" data-original="#000000" fill="currentColor"
-                    d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
-                  </path>
-                </g>
-              </svg>
-            </div>
+      <section id="admin-dashboard-stats-section" class="admin-section active">
+        <h1>📊 Dashboard</h1>
+        <div class="admin-stats-grid">
+          <div class="stat-card">
+            <h3>Faturamento Total</h3>
+            <p id="stat-total-revenue">R$ 0,00</p>
+            <i class="ri-money-dollar-circle-line"></i>
           </div>
-        </label>
-
-        <div style="margin-top:12px;">
-          <button type="submit" class="button">Salvar Produto</button>
+          <div class="stat-card">
+            <h3>Total de Pedidos</h3>
+            <p id="stat-total-orders">0</p>
+            <i class="ri-shopping-bag-3-line"></i>
+          </div>
+          <div class="stat-card">
+            <h3>Total de Clientes</h3>
+            <p id="stat-total-clients">0</p>
+            <i class="ri-user-3-line"></i>
+          </div>
+          <div class="stat-card">
+            <h3>Produtos Cadastrados</h3>
+            <p id="stat-total-products">0</p>
+            <i class="ri-database-2-line"></i>
+          </div>
         </div>
-      </form>
-    </section>
+      </section>
 
-    <!-- LISTA DE PRODUTOS -->
-    <section>
-      <h1>🛒 Produtos</h1>
-      <div id="adminProducts" class="admin__products"></div>
-    </section>
-  </main>
+      <section id="admin-orders-section" class="admin-section">
+        <h1>📦 Pedidos</h1>
+        <div id="adminOrders" class="admin__orders">
+        </div>
+      </section>
 
+      <section id="admin-products-section" class="admin-section">
+        <section class="admin-product-form-container">
+          <h1 id="product-form-title">➕ Adicionar Novo Produto</h1>
+          <form id="adminAddProduct" class="admin__form">
+            <input type="hidden" name="id">
+
+            <label>Nome</label>
+            <input type="text" name="name" placeholder="Oneplus 15" required>
+
+            <label>Imagem (URL)</label>
+            <input type="url" name="img" placeholder="https://i.postimg.cc/C1xr9z6t/Oneplus-15-design-Photoroom-1.png"
+              required>
+
+            <label>Preço (R$)</label>
+            <input name="price" type="number" step="0.01" placeholder="1299990" required>
+
+            <label>Marca / Meta</label>
+            <input name="brand_meta">
+
+            <label>Descrição</label>
+            <textarea name="description"></textarea>
+
+            <label>Parcelas</label>
+            <input name="installments">
+
+            <label>Estoque</label>
+            <input name="stock" type="number">
+
+            <label>Categoria</label>
+            <select name="category" required>
+              <option value="">-- Escolha --</option>
+              <option value="hardware">Hardware</option>
+              <option value="perifericos">Periféricos</option>
+              <option value="monitores">Monitores</option>
+              <option value="computadores">Computadores</option>
+              <option value="cadeiras">Cadeiras</option>
+              <option value="celulares">Celulares</option>
+            </select>
+
+            <label>Produto em destaque</label>
+            <label class="switch">
+              <input checked="" type="checkbox" name="featured" id="product-featured">
+              <div class="slider">
+                <div class="circle">
+                  <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                      <path data-original="#000000" fill="currentColor"
+                        d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                      </path>
+                    </g>
+                  </svg>
+                  <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                    viewBox="0 0 24 24" y="0" x="0" height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                      <path class="" data-original="#000000" fill="currentColor"
+                        d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                      </path>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </label>
+
+            <div style="margin-top:12px;">
+              <button type="submit" class="button">Salvar Produto</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="admin-product-list-container">
+          <h1>🛒 Produtos Cadastrados</h1>
+          <div id="adminProducts" class="admin__products">
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
   <footer class="footer">
     <div class="footer__container">
-      <!-- Logo + redes -->
       <div class="footer__column footer__logo">
         <a href="index.html"><img src="geral/img/logo/logo branca.png" alt="CyberX"
             class="footer__logo-img logo__light"></a>
@@ -189,7 +256,6 @@
         </div>
       </div>
 
-      <!-- Institucional -->
       <div class="footer__column">
         <h3>INSTITUCIONAL</h3>
         <ul>
@@ -204,7 +270,6 @@
         </ul>
       </div>
 
-      <!-- Atendimento + pagamentos -->
       <div class="footer__column">
         <h3>ATENDIMENTO</h3>
         <p><i class="ri-phone-fill"></i> (61) XXXXX-XXXX</p>
@@ -230,7 +295,9 @@
     <i class="ri-arrow-up-line"></i>
   </a>
 
-  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="geral/js/gsap.js"></script>
   <script type="module" src="geral/js/supabase.js"></script>
   <script type="module" src="geral/js/auth.js"></script>
   <script type="module" src="geral/js/ui.js"></script>

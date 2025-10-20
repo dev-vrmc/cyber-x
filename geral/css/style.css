@@ -515,20 +515,21 @@ main {
 
 .scrollup {
     position: fixed;
-    right: 1rem;
-    bottom: -50px;
+    left: 1rem;
+    bottom: -60px;
     background-color: var(--container-color);
     filter: grayscale(0.1) contrast(1.1);
     display: inline-flex;
-    padding: 6px;
-    font-size: 1.25rem;
+    padding: 10px;
+    font-size: 2rem;
     color: var(--first-color);
     z-index: 10;
     transition: bottom .4s, transform .4s, background-color .4s;
+    border-radius: 50%;
 }
 
 .scrollup.show-scroll {
-    bottom: 1.5rem;
+    bottom: 1.4rem;
     /* aparece */
 }
 
@@ -1590,6 +1591,9 @@ label {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .cart-item-price {
@@ -2124,69 +2128,6 @@ label {
     box-shadow: var(--circle-checked-shadow);
 }
 
-
-/* ===================
-   CONFIRM MODAL
-=================== */
-.confirm-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    backdrop-filter: blur(5px);
-}
-
-.confirm-modal {
-    background: var(--container-color);
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--first-color);
-    box-shadow: 0 0 25px var(--first-color-light);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-}
-
-.confirm-modal p {
-    font-size: var(--h3-font-size);
-    color: var(--title-color);
-    margin-bottom: 1.5rem;
-}
-
-.confirm-modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.confirm-modal .button {
-    background-color: transparent;
-    border: 1px solid var(--first-color);
-    color: var(--first-color);
-    padding: 0.5rem 1rem;
-}
-
-.confirm-modal .button:hover {
-    background-color: var(--first-color);
-    color: white;
-}
-
-.confirm-modal #confirm-cancel {
-    border-color: var(--second-color);
-    color: var(--second-color);
-}
-
-.confirm-modal #confirm-cancel:hover {
-    background-color: var(--second-color);
-    color: var(--body-color-inverse);
-}
-
 /* ===================
    BOTÕES ADMIN NOS CARDS
 =================== */
@@ -2361,6 +2302,158 @@ label {
 }
 
 /* ===================
+   ADMIN DASHBOARD LAYOUT
+   =================== */
+.admin-dashboard-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 138px);
+    margin-top: 138px;
+    background-color: var(--body-color);
+}
+
+/* === BARRA LATERAL === */
+.admin-sidebar {
+    background-color: var(--container-color);
+    border-right: 1px solid var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 2rem;
+}
+
+.admin-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0.5rem;
+}
+
+.admin-sidebar-logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.admin-sidebar-logo span {
+    font-size: var(--h3-font-size);
+    color: var(--title-color);
+    font-weight: var(--font-semi-bold);
+    font-family: var(--title-font);
+}
+
+.admin-sidebar-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    color: var(--text-color);
+    font-weight: var(--font-medium);
+    transition: 0.3s all ease;
+}
+
+.admin-sidebar-link i {
+    font-size: 1.25rem;
+}
+
+.admin-sidebar-link:hover {
+    background-color: var(--body-color);
+    color: var(--title-color);
+}
+
+.admin-sidebar-link.active {
+    background-color: var(--first-color);
+    color: #fff;
+    box-shadow: 0 0 10px var(--first-color-light);
+}
+
+/* === CONTEÚDO ADMIN === */
+.admin-content {
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: var(--body-color);
+    margin-top: 0px;
+}
+
+/* === SEÇÕES ADMIN (para navegação) === */
+.admin-section {
+    display: none;
+    /* Escondido por padrão */
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.admin-section.active {
+    display: flex;
+    /* Mostra a seção ativa */
+}
+
+/* === GRID DE ESTATÍSTICAS === */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: var(--container-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--shadow-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card h3 {
+    font-size: var(--normal-font-size);
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    font-size: var(--biggest-font-size);
+    color: var(--title-color);
+    font-weight: var(--font-semi-bold);
+    font-family: var(--title-font);
+}
+
+.stat-card i {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 2.5rem;
+    color: var(--first-color);
+    opacity: 0.2;
+}
+
+/* === Containers de Formulário/Lista de Produtos === */
+.admin-product-form-container,
+.admin-product-list-container {
+    background: var(--container-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.admin-product-form-container>h1,
+.admin-product-list-container>h1 {
+    margin-bottom: 2rem;
+}
+
+/* Remove a classe antiga de main */
+.admin__main {
+    margin-top: 0;
+    padding: 0;
+}
+
+/* ===================
    ACCOUNT PAGE
 =================== */
 .account__main {
@@ -2378,6 +2471,7 @@ label {
 .account__main h2 {
     color: var(--title-color);
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .account-container,
@@ -2388,6 +2482,14 @@ label {
     border-radius: 12px;
     border: 1px solid var(--shadow-color);
     box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.account-container {
+    margin-top: 20px;
+}
+
+.orders-container {
+    margin-bottom: 20px;
 }
 
 /* ===================
@@ -2417,6 +2519,18 @@ label {
     transition: 0.3s all ease;
 }
 
+.form-group-half {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group-div {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 #accountForm input:focus {
     outline: none;
     border-color: var(--first-color);
@@ -2439,6 +2553,7 @@ label {
     display: flex;
     gap: 1rem;
     margin-top: 0.5rem;
+    justify-content: center;
 }
 
 #edit-btn,
@@ -2499,9 +2614,8 @@ label {
     font-size: var(--h2-font-size);
     color: var(--title-color);
     margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
     gap: 0.5rem;
+    text-align: center;
 }
 
 #wishlistContainer {
@@ -3040,46 +3154,6 @@ label {
 }
 
 /* ===================
-   LOADING OVERLAY
-=================== */
-#loader-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-#loader-overlay.show {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.loader-spinner {
-    width: 60px;
-    height: 60px;
-    border: 5px solid var(--shadow-color);
-    border-top-color: var(--first-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* ===================
    ACCOUNT PAGE (Novos Estilos)
 =================== */
 .avatar-section {
@@ -3112,7 +3186,7 @@ label {
 
 .form-group-cep {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 10px;
 }
 
@@ -3195,53 +3269,7 @@ label {
     color: var(--title-color);
 }
 
-/* Em geral/css/style.css */
-/* ===================
-   MODAL OVERLAY
-=================== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
 
-.modal-overlay.show {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.modal-content {
-    background: var(--container-color);
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--first-color);
-    box-shadow: 0 0 25px var(--first-color-light);
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay.show .modal-content {
-    transform: scale(1);
-}
-
-.modal-content h2 {
-    color: var(--title-color);
-    margin-bottom: 1rem;
-}
 
 .address-details {
     text-align: left;
@@ -3365,4 +3393,223 @@ label {
 
 .shipping-details p {
     margin: 0;
+}
+
+/* =============== LOADER GERAL =============== */
+/* O overlay que cobre a tela inteira */
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Cor cinza claro e opaca, conforme solicitado */
+    background-color: #5e5e5e46;
+    backdrop-filter: blur(2px);
+    /* Efeito de desfoque opcional */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+    /* Começa escondido */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Classe 'show' que é adicionada pelo ui.js */
+#loader-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* A "bolinha girando" (spinner) */
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    /* Use a cor do seu 'span' se preferir */
+    border: 5px solid var(--first-color);
+    border-bottom-color: transparent;
+    /* Cria o efeito de "arco" */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===================
+   MODAL UNIFICADO (Endereço, Confirmação, etc.)
+   =================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 1rem; /* Garante espaço nas laterais em telas pequenas */
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  background: var(--container-color);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--first-color);
+  box-shadow: 0 0 25px var(--first-color-light);
+  max-width: 500px; /* Aumentado para melhor visualização do endereço */
+  width: 100%;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  text-align: center;
+}
+
+.modal-overlay.show .modal-content {
+  transform: scale(1);
+}
+
+.modal-content h2 {
+  color: var(--title-color);
+  margin-bottom: 1rem;
+  font-size: var(--h2-font-size);
+}
+
+.modal-content p {
+  font-size: var(--normal-font-size);
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Detalhes do Endereço no Modal */
+.address-details {
+  text-align: left;
+  margin: 1.5rem 0;
+  background: var(--body-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.7;
+  border: 1px solid var(--shadow-color);
+}
+
+.address-details strong {
+  color: var(--title-color);
+}
+
+.address-details hr {
+  border: none;
+  height: 1px;
+  background-color: var(--shadow-color);
+  margin: 0.75rem 0;
+}
+
+/* Ações do Modal (Botões) */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap; /* Faz os botões quebrarem a linha em telas pequenas */
+}
+
+/* Botão Primário (Confirmar) */
+.modal-actions .button {
+  background-color: transparent;
+  border: 1px solid var(--first-color);
+  color: var(--first-color);
+  padding: 0.75rem 1.5rem;
+}
+
+.modal-actions .button:hover {
+  background-color: var(--first-color);
+  color: white;
+}
+
+/* Botão Secundário (Cancelar / Editar) */
+.modal-actions .button-secondary {
+  background-color: transparent;
+  border: 1px solid var(--second-color);
+  color: var(--second-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--body-font);
+  font-weight: var(--font-semi-bold);
+  transition: 0.2s all ease;
+  text-decoration: none; /* Caso use como link */
+}
+
+.modal-actions .button-secondary:hover {
+  background-color: var(--second-color);
+  color: var(--body-color-inverse);
+}
+
+.confirm-modal p {
+    font-size: var(--h3-font-size);
+    color: var(--title-color);
+    margin-bottom: 1.5rem;
+}
+
+.confirm-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.confirm-modal .button {
+    background-color: transparent;
+    border: 1px solid var(--first-color);
+    color: var(--first-color);
+    padding: 0.5rem 1rem;
+}
+
+.confirm-modal .button:hover {
+    background-color: var(--first-color);
+    color: white;
+}
+
+.confirm-modal #confirm-cancel {
+    border-color: var(--second-color);
+    color: var(--second-color);
+}
+
+.confirm-modal #confirm-cancel:hover {
+    background-color: var(--second-color);
+    color: var(--body-color-inverse);
+}
+
+.chatbot{
+    width: 1px;
+}
+
+::-webkit-scrollbar {
+  width: .5rem;
+  background-color: var(--container-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--first-color-alt);
+  border-radius: 10px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--first-color);
 }

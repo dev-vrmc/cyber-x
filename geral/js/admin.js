@@ -2,243 +2,204 @@
 
 import { supabase } from './supabase.js';
 import { authManager } from './auth.js';
-import { productManager } from './products.js';
-import { showToast } from './ui.js';
+// ADICIONADO: formatPrice
+import { productManager, formatPrice } from './products.js';
+import { showToast, showLoader, hideLoader } from './ui.js';
 
 // Mapa de categorias para converter ID -> slug e vice-versa
 const categoryMapById = { 1: 'hardware', 2: 'perifericos', 3: 'computadores', 4: 'cadeiras', 5: 'monitores', 6: 'celulares' };
 const categoryMapBySlug = { 'hardware': 1, 'perifericos': 2, 'computadores': 3, 'cadeiras': 4, 'monitores': 5, 'celulares': 6 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Proteção da Rota
-    await authManager.getCurrentUser();
-    const profile = await authManager.fetchUserProfile();
+    showLoader();
+    try {
+        // Proteção da Rota
+        await authManager.getCurrentUser();
+        const profile = await authManager.fetchUserProfile();
 
-    if (!profile || profile.role !== 'admin') {
-        alert('Acesso negado. Você precisa ser um administrador.');
+        if (!profile || profile.role !== 'admin') {
+            alert('Acesso negado. Você precisa ser um administrador.');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Carrega todos os dados assincronamente
+        await Promise.all([
+            loadDashboardStats(),
+            loadProducts(),
+            loadOrders()
+        ]);
+
+        // Lógica de navegação da barra lateral
+        setupSidebarNavigation();
+
+        const form = document.getElementById('adminAddProduct');
+        const formTitle = document.getElementById('product-form-title');
+        const hiddenIdInput = form.querySelector('input[name="id"]');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const productIdToEdit = urlParams.get('edit');
+        if (productIdToEdit) {
+            const productToEdit = await productManager.getProductById(productIdToEdit);
+            if (productToEdit) {
+                handleEdit(productToEdit);
+                // Mostra a seção de produtos se estiver editando
+                document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+                document.getElementById('admin-products-section').classList.add('active');
+                document.querySelectorAll('.admin-sidebar-link').forEach(l => l.classList.remove('active'));
+                document.querySelector('[data-target="#admin-products-section"]').classList.add('active');
+            }
+        }
+
+        // Lógica do Formulário
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoader();
+            try {
+                const formData = new FormData(form);
+                const productData = Object.fromEntries(formData.entries());
+                const id = productData.id;
+
+                productData.category_id = categoryMapBySlug[productData.category];
+                delete productData.category;
+
+                productData.price = parseFloat(productData.price);
+                productData.stock = parseInt(productData.stock, 10);
+                productData.featured = formData.get('featured') === 'on';
+
+                let error;
+                if (id) {
+                    const { error: updateError } = await supabase.from('products').update(productData).eq('id', id);
+                    error = updateError;
+                } else {
+                    delete productData.id;
+                    const { error: insertError } = await supabase.from('products').insert([productData]);
+                    error = insertError;
+                }
+
+                if (error) {
+                    showToast(`Erro ao salvar produto: ${error.message}`, 'error');
+                } else {
+                    showToast('Produto salvo com sucesso!');
+                    form.reset();
+                    hiddenIdInput.value = '';
+                    formTitle.textContent = '➕ Adicionar Novo Produto';
+                    await loadProducts(); // Recarrega os produtos
+                }
+            } catch (err) {
+                showToast(`Erro inesperado: ${err.message}`, 'error');
+            } finally {
+                hideLoader();
+            }
+        });
+    } catch (authError) {
+        showToast('Erro de autenticação.', 'error');
         window.location.href = 'index.html';
-        return;
+    } finally {
+        hideLoader();
     }
-
-    const form = document.getElementById('adminAddProduct');
-    const formTitle = document.getElementById('product-form-title');
-    const hiddenIdInput = form.querySelector('input[name="id"]');
-
-    await loadProducts();
-    await loadOrders();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const productIdToEdit = urlParams.get('edit');
-    if (productIdToEdit) {
-        const productToEdit = await productManager.getProductById(productIdToEdit);
-        if (productToEdit) {
-            handleEdit(productToEdit);
-        }
-    }
-
-    // Lógica do Formulário
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const productData = Object.fromEntries(formData.entries());
-        const id = productData.id;
-
-        productData.category_id = categoryMapBySlug[productData.category];
-        delete productData.category;
-
-        productData.price = parseFloat(productData.price);
-        productData.stock = parseInt(productData.stock, 10);
-        productData.featured = formData.get('featured') === 'on';
-
-        let error;
-        if (id) {
-            const { error: updateError } = await supabase.from('products').update(productData).eq('id', id);
-            error = updateError;
-        } else {
-            delete productData.id;
-            const { error: insertError } = await supabase.from('products').insert([productData]);
-            error = insertError;
-        }
-
-        if (error) {
-            showToast(`Erro ao salvar produto: ${error.message}`, 'error');
-        } else {
-            showToast('Produto salvo com sucesso!');
-            form.reset();
-            hiddenIdInput.value = '';
-            formTitle.textContent = '➕ Adicionar Novo Produto';
-            await loadProducts();
-        }
-    });
 });
 
-async function loadProducts() {
-    const container = document.getElementById('adminProducts');
-    const products = await productManager.getProducts(true);
+// =======================================================
+// NOVA LÓGICA: NAVEGAÇÃO DA BARRA LATERAL
+// =======================================================
+function setupSidebarNavigation() {
+    const links = document.querySelectorAll('.admin-sidebar-link');
+    const sections = document.querySelectorAll('.admin-section');
 
-    if (!container) return;
-    container.innerHTML = products.map(p => `
-        <div class="admin-product-item">
-            <span>${p.name} (Estoque: ${p.stock})</span>
-            <div>
-                <button class="edit-btn" data-id="${p.id}">Editar</button>
-                <button class="delete-btn" data-id="${p.id}">Excluir</button>
-            </div>
-        </div>
-    `).join('');
+    links.forEach(link => {
+        // Ignora o link "Voltar ao Site"
+        if (link.getAttribute('href') === 'index.html') return;
 
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const product = products.find(p => p.id == e.target.dataset.id);
-            handleEdit(product);
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-target');
+
+            // Remove 'active' de todas as seções e links
+            sections.forEach(s => s.classList.remove('active'));
+            links.forEach(l => l.classList.remove('active'));
+
+            // Adiciona 'active' ao link clicado e à seção alvo
+            link.classList.add('active');
+            document.querySelector(targetId).classList.add('active');
         });
-    });
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => handleDelete(e.target.dataset.id));
     });
 }
 
 // =======================================================
-// LÓGICA DE PEDIDOS PARA O ADMIN (ATUALIZADA)
+// NOVA LÓGICA: CARREGAR ESTATÍSTICAS DO DASHBOARD
 // =======================================================
+async function loadDashboardStats() {
+    showLoader();
+    try {
+        const [
+            { data: ordersData, error: ordersError },
+            { count: clientCount, error: clientError },
+            { count: productCount, error: productError }
+        ] = await Promise.all([
+            supabase.from('orders').select('total'),
+            supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'user'),
+            supabase.from('products').select('id', { count: 'exact', head: true })
+        ]);
 
-async function loadOrders() {
-    const container = document.getElementById('adminOrders');
-    if (!container) return;
-
-    // --- ALTERADO: Adicionado os campos de endereço no select ---
-    const { data: orders, error } = await supabase
-        .from('orders')
-        .select(`
-            id, created_at, total, status,
-            profiles!inner(
-                full_name,
-                address_street,
-                address_number,
-                address_complement,
-                address_neighborhood,
-                address_city,
-                address_state,
-                address_zipcode
-            ),
-            order_items ( quantity, unit_price, products!inner(name) )
-        `)
-        .order('created_at', { ascending: false });
-
-    if (error) {
-        console.error('Erro ao buscar pedidos:', error);
-        container.innerHTML = '<p>Erro ao carregar pedidos.</p>';
-        return;
-    }
-    if (!orders || orders.length === 0) {
-        container.innerHTML = '<p>Nenhum pedido encontrado.</p>';
-        return;
-    }
-
-    // --- ALTERADO: Modificação no layout para incluir o endereço ---
-    container.innerHTML = orders.map(order => {
-        const statusMap = {
-            pending: 'Pedido pendente.',
-            shipped: 'Pedido enviado.',
-            completed: 'Pedido concluído.',
-            canceled: 'Pedido cancelado.'
-        };
-
-        // --- NOVO: Bloco de HTML para o endereço ---
-        const addressHtml = order.profiles ? `
-            <div class="order-address">
-                <strong>Endereço de Entrega:</strong>
-                <p>
-                    ${order.profiles.address_street || 'Rua não informada'}, Nº ${order.profiles.address_number || 'S/N'}<br>
-                    ${order.profiles.address_complement ? order.profiles.address_complement + '<br>' : ''}
-                    ${order.profiles.address_neighborhood || 'Bairro não informado'} - ${order.profiles.address_city || 'Cidade não informada'}/${order.profiles.address_state || 'UF'}<br>
-                    CEP: ${order.profiles.address_zipcode || 'CEP não informado'}
-                </p>
-            </div>
-            <br>
-        ` : '<p>Endereço não disponível.</p>';
-
-        return `
-        <div class="admin-order">
-            <div class="order-header">
-                <h2>Pedido Nº: ${order.id}</h2><br>
-                <p><strong>Nome:</strong> ${order.profiles?.full_name || 'Usuário Removido'}</p><br>
-            </div>
-
-            ${addressHtml} 
-
-            <div class="order-details">
-                <strong>Itens do Pedido:</strong><br>
-                <ul>
-                ${order.order_items.map(item => `
-                    <li>
-                        -- ${item.quantity}x ${item.products?.name || 'Produto Removido'} — 
-                        ${Number(item.unit_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </li>
-                `).join('')}
-                </ul>
-            </div>
-
-            <div class="order-footer">
-                <p><strong>Total:</strong> ${Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p><br>
-                <p><strong>Data:</strong> ${new Date(order.created_at).toLocaleDateString('pt-BR')}</p><br>
-            </div>
-            
-            <p class="order-status-text">${statusMap[order.status]}</p>
-
-            <div class="order-actions">
-                <label for="status-${order.id}" style="margin-top:5px"><strong>Alterar Status:</strong></label>
-                <select class="order-status-select" data-id="${order.id}">
-                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pendente</option>
-                    <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Enviado</option>
-                    <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Concluído</option>
-                    <option value="canceled" ${order.status === 'canceled' ? 'selected' : ''}>Cancelado</option>
-                </select>
-                <button class="delete-order-btn" data-id="${order.id}">Excluir Pedido</button>
-            </div>
-        </div>
-    `}).join('');
-
-    // Adiciona listener para o select de status
-    container.querySelectorAll('.order-status-select').forEach(select => {
-        select.addEventListener('change', async (e) => {
-            const orderId = e.target.dataset.id;
-            const newStatus = e.target.value;
-            await updateOrderStatus(orderId, newStatus);
-            await loadOrders(); 
-        });
-    });
-
-    // Adiciona listener para os botões de excluir pedido
-    container.querySelectorAll('.delete-order-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            handleDeleteOrder(e.target.dataset.id);
-        });
-    });
-}
-
-async function updateOrderStatus(orderId, status) {
-    const { error } = await supabase.from('orders').update({ status }).eq('id', orderId);
-    if (error) {
-        showToast(`Erro ao atualizar status: ${error.message}`, 'error');
-    } else {
-        showToast(`Status do pedido #${orderId} atualizado.`);
-    }
-}
-
-// --- NOVA FUNÇÃO PARA EXCLUIR PEDIDOS ---
-async function handleDeleteOrder(orderId) {
-    if (confirm(`Tem certeza que deseja excluir o pedido #${orderId}? Esta ação não pode ser desfeita.`)) {
-        const { error } = await supabase.from('orders').delete().eq('id', orderId);
-        if (error) {
-            showToast(`Erro ao excluir pedido: ${error.message}`, 'error');
-        } else {
-            showToast('Pedido excluído com sucesso!');
-            await loadOrders(); // Recarrega a lista de pedidos
+        if (ordersError || clientError || productError) {
+            throw new Error(ordersError?.message || clientError?.message || productError?.message);
         }
+
+        // Calcula faturamento total
+        const totalRevenue = ordersData.reduce((acc, order) => acc + order.total, 0);
+
+        // Atualiza o HTML
+        document.getElementById('stat-total-revenue').textContent = formatPrice(totalRevenue);
+        document.getElementById('stat-total-orders').textContent = ordersData.length;
+        document.getElementById('stat-total-clients').textContent = clientCount;
+        document.getElementById('stat-total-products').textContent = productCount;
+
+    } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+        showToast('Erro ao carregar estatísticas.', 'error');
+    } finally {
+        hideLoader();
     }
 }
 
+
+// =======================================================
+// LÓGICA DE PRODUTOS (EXISTENTE)
+// =======================================================
+async function loadProducts() {
+    showLoader();
+    try {
+        const container = document.getElementById('adminProducts');
+        // NOTA: getProducts() não tem um argumento booleano 'true'. Removi.
+        const products = await productManager.getProducts();
+
+        if (!container) return;
+        container.innerHTML = products.map(p => `
+            <div class="admin-product-item">
+                <span>${p.name} (Estoque: ${p.stock})</span>
+                <div>
+                    <button class="edit-btn" data-id="${p.id}">Editar</button>
+                    <button class="delete-btn" data-id="${p.id}">Excluir</button>
+                </div>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const product = products.find(p => p.id == e.target.dataset.id);
+                handleEdit(product);
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => handleDelete(e.target.dataset.id));
+        });
+    } catch (error) {
+        showToast('Erro ao carregar produtos.', 'error');
+    } finally {
+        hideLoader();
+    }
+}
 
 function handleEdit(product) {
     if (!product) return;
@@ -247,7 +208,6 @@ function handleEdit(product) {
     form.querySelector('input[name="name"]').value = product.name;
     form.querySelector('input[name="img"]').value = product.img;
     form.querySelector('input[name="price"]').value = product.price;
-/*     form.querySelector('input[name="sku"]').value = product.sku || ''; */
     form.querySelector('input[name="brand_meta"]').value = product.brand_meta || '';
     form.querySelector('textarea[name="description"]').value = product.description || '';
     form.querySelector('input[name="installments"]').value = product.installments || '';
@@ -261,12 +221,167 @@ function handleEdit(product) {
 
 async function handleDelete(id) {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
-        const { error } = await supabase.from('products').delete().eq('id', id);
+        showLoader();
+        try {
+            const { error } = await supabase.from('products').delete().eq('id', id);
+            if (error) {
+                showToast(`Erro ao excluir: ${error.message}`, 'error');
+            } else {
+                showToast('Produto excluído com sucesso!');
+                await loadProducts();
+            }
+        } catch (err) {
+            showToast(`Erro: ${err.message}`, 'error');
+        } finally {
+            hideLoader();
+        }
+    }
+}
+
+// =======================================================
+// LÓGICA DE PEDIDOS (EXISTENTE)
+// =======================================================
+async function loadOrders() {
+    showLoader();
+    const container = document.getElementById('adminOrders');
+    if (!container) return;
+
+    try {
+        const { data: orders, error } = await supabase
+            .from('orders')
+            .select(`
+                id, created_at, total, status,
+                profiles!inner(
+                    full_name,
+                    address_street,
+                    address_number,
+                    address_complement,
+                    address_neighborhood,
+                    address_city,
+                    address_state,
+                    address_zipcode
+                ),
+                order_items ( quantity, unit_price, products!inner(name) )
+            `)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!orders || orders.length === 0) {
+            container.innerHTML = '<p>Nenhum pedido encontrado.</p>';
+            return;
+        }
+
+        container.innerHTML = orders.map(order => {
+            const statusMap = {
+                pending: 'Pedido pendente.',
+                shipped: 'Pedido enviado.',
+                completed: 'Pedido concluído.',
+                canceled: 'Pedido cancelado.'
+            };
+
+            const addressHtml = order.profiles ? `
+                <div class="order-address">
+                    <strong>Endereço de Entrega:</strong>
+                    <p>
+                        ${order.profiles.address_street || 'Rua não informada'}, Nº ${order.profiles.address_number || 'S/N'}<br>
+                        ${order.profiles.address_complement ? order.profiles.address_complement + '<br>' : ''}
+                        ${order.profiles.address_neighborhood || 'Bairro não informado'} - ${order.profiles.address_city || 'Cidade não informada'}/${order.profiles.address_state || 'UF'}<br>
+                        CEP: ${order.profiles.address_zipcode || 'CEP não informado'}
+                    </p>
+                </div>
+                <br>
+            ` : '<p>Endereço não disponível.</p>';
+
+            return `
+            <div class="admin-order">
+                <div class="order-header">
+                    <h2>Pedido Nº: ${order.id}</h2><br>
+                    <p><strong>Nome:</strong> ${order.profiles?.full_name || 'Usuário Removido'}</p><br>
+                </div>
+                ${addressHtml} 
+                <div class="order-details">
+                    <strong>Itens do Pedido:</strong><br>
+                    <ul>
+                    ${order.order_items.map(item => `
+                        <li>
+                            -- ${item.quantity}x ${item.products?.name || 'Produto Removido'} — 
+                            ${Number(item.unit_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </li>
+                    `).join('')}
+                    </ul>
+                </div>
+                <div class="order-footer">
+                    <p><strong>Total:</strong> ${Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p><br>
+                    <p><strong>Data:</strong> ${new Date(order.created_at).toLocaleDateString('pt-BR')}</p><br>
+                </div>
+                <p class="order-status-text">${statusMap[order.status]}</p>
+                <div class="order-actions">
+                    <label for="status-${order.id}" style="margin-top:5px"><strong>Alterar Status:</strong></label>
+                    <select class="order-status-select" data-id="${order.id}">
+                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pendente</option>
+                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Enviado</option>
+                        <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Concluído</option>
+                        <option value="canceled" ${order.status === 'canceled' ? 'selected' : ''}>Cancelado</option>
+                    </select>
+                    <button class="delete-order-btn" data-id="${order.id}">Excluir Pedido</button>
+                </div>
+            </div>
+        `}).join('');
+
+        container.querySelectorAll('.order-status-select').forEach(select => {
+            select.addEventListener('change', async (e) => {
+                const orderId = e.target.dataset.id;
+                const newStatus = e.target.value;
+                await updateOrderStatus(orderId, newStatus);
+                await loadOrders();
+            });
+        });
+
+        container.querySelectorAll('.delete-order-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                handleDeleteOrder(e.target.dataset.id);
+            });
+        });
+    } catch (error) {
+        console.error('Erro ao buscar pedidos:', error);
+        container.innerHTML = '<p>Erro ao carregar pedidos.</p>';
+    } finally {
+        hideLoader();
+    }
+}
+
+async function updateOrderStatus(orderId, status) {
+    showLoader();
+    try {
+        const { error } = await supabase.from('orders').update({ status }).eq('id', orderId);
         if (error) {
-            showToast(`Erro ao excluir: ${error.message}`, 'error');
+            showToast(`Erro ao atualizar status: ${error.message}`, 'error');
         } else {
-            showToast('Produto excluído com sucesso!');
-            await loadProducts();
+            showToast(`Status do pedido #${orderId} atualizado.`);
+        }
+    } catch (err) {
+        showToast(`Erro: ${err.message}`, 'error');
+    } finally {
+        hideLoader();
+    }
+}
+
+async function handleDeleteOrder(orderId) {
+    if (confirm(`Tem certeza que deseja excluir o pedido #${orderId}? Esta ação não pode ser desfeita.`)) {
+        showLoader();
+        try {
+            const { error } = await supabase.from('orders').delete().eq('id', orderId);
+            if (error) {
+                showToast(`Erro ao excluir pedido: ${error.message}`, 'error');
+            } else {
+                showToast('Pedido excluído com sucesso!');
+                await loadOrders(); // Recarrega a lista de pedidos
+            }
+        } catch (err) {
+            showToast(`Erro: ${err.message}`, 'error');
+        } finally {
+            hideLoader();
         }
     }
 }

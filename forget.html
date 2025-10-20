@@ -12,9 +12,14 @@
 </head>
 
 <body>
+    <div id="loader-overlay">
+        <div class="loader-spinner"></div>
+    </div>
+
     <div class="background-login">
         <video autoplay muted loop playsinline>
-            <source src="https://res.cloudinary.com/dklxgbhoc/video/upload/v1759781325/video-login_zppakr.mp4" type="video/mp4">
+            <source src="https://res.cloudinary.com/dklxgbhoc/video/upload/v1759781325/video-login_zppakr.mp4"
+                type="video/mp4">
         </video>
     </div>
     <section class="section__login">
@@ -45,6 +50,9 @@
         <img src="geral/img/logo/simbolo.png" class="logo-holograma">
     </a>
 
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="geral/js/gsap.js"></script>
     <script type="module" src="geral/js/supabase.js"></script>
     <script type="module" src="geral/js/ui.js"></script>
     <script type="module" src="geral/js/auth.js"></script>
