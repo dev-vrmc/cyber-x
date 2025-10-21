@@ -988,7 +988,7 @@ label {
     gap: 12px;
     padding: 20px;
     width: 260px;
-    min-height: 330px;
+    min-height: 340px;
     background: linear-gradient(145deg, var(--container-color), rgba(255, 255, 255, 0.02));
     border-radius: 16px;
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
