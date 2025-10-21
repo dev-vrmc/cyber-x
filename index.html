@@ -4,6 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // Verifica se o usuário já viu a introdução *nesta sessão*
+    if (!sessionStorage.getItem('seenIntro')) {
+      // Se não viu, define a flag para 'true'
+      sessionStorage.setItem('seenIntro', 'true');
+
+      // Redireciona o usuário para a página de introdução
+      // Usamos .replace() para que a 'index.html' não fique no histórico do navegador
+      window.location.replace('intro.html');
+    }
+  </script>
   <link rel="shortcut icon" href="geral/img/logo/simbolo.png" type="image/x-icon" />
   <link rel="stylesheet" href="geral/css/style.css" />
   <link rel="stylesheet" href="geral/css/media-query.css" />
@@ -13,9 +24,6 @@
 </head>
 
 <body>
-  <div id="loader-overlay">
-    <div class="loader-spinner"></div>
-  </div>
 
   <header class="header">
     <nav class="nav__subcontainer">
@@ -266,13 +274,12 @@
     (function () {
       var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
       s1.async = true;
-      s1.src = 'https://embed.tawk.to/68ebce0f9e980b194b492ca8/1j7chpr0q';
+      s1.src = 'https://embed.tawk.to/68ebce0f9e980b194b492ca8/1j820mbae';
       s1.charset = 'UTF-8';
       s1.setAttribute('crossorigin', '*');
       s0.parentNode.insertBefore(s1, s0);
     })();
   </script>
-
 
   <script type="module">
     import { productManager } from './geral/js/products.js';
