@@ -228,6 +228,24 @@
       });
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentPagePath = window.location.pathname.split('/').pop();
+      const navItems = document.querySelectorAll('.nav_container .nav__item');
+
+      navItems.forEach(item => {
+        const link = item.querySelector('.nav__link');
+        if (link) {
+          const linkPath = link.getAttribute('href');
+
+          // Compara o href do link com o nome da página atual
+          if (linkPath === currentPagePath) {
+            item.classList.add('active-link');
+          }
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

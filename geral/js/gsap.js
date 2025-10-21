@@ -309,16 +309,15 @@ if (document.querySelector(".section__login")) {
   );
 
   gsap.fromTo(".other-user",
-    { autoAlpha: 0,},
-    { autoAlpha: 1,  duration: 3,  delay: 1.2 }
+    { autoAlpha: 0, },
+    { autoAlpha: 1, duration: 3, delay: 1.2 }
   );
-    gsap.to(".gsap-login-links",
-    { x:-49 }
+  gsap.to(".gsap-login-links",
+    { x: -49 }
   );
 
   gsap.fromTo(".logo-holograma",
-    { autoAlpha: 0, scale: 0.5 }, 
+    { autoAlpha: 0, scale: 0.5 },
     { autoAlpha: 1, scale: 1, duration: 1.5, delay: 0.2, ease: "elastic.out(1, 0.5)" } // FINAL
   );
 }
-
