@@ -56,8 +56,7 @@
     gap: 2.5rem;
   }
 
-
-  .information__login>h1 {
+  .information__login > h1 {
     font-size: 50px;
   }
 
@@ -70,7 +69,6 @@
     width: 800px;
   }
 
-
   label {
     font-size: 15px;
   }
@@ -82,7 +80,6 @@
   .user {
     margin-bottom: 20px;
   }
-
 }
 
 /* 🔧 Correção de altura para telas menores */
@@ -107,7 +104,7 @@
     width: 450px;
   }
 
-  .information__login>h1 {
+  .information__login > h1 {
     font-size: 24px;
   }
 
@@ -147,7 +144,6 @@
     font-size: 12px;
   }
 }
-
 
 /* ==========================================================
    BREAKPOINT: até 1023px (TABLET e CELULAR)
@@ -308,7 +304,6 @@
    LOGIN, CADASTRO E CONTA
    ========================================================== */
 @media (max-width: 768px) {
-
   .main-login,
   .section__login {
     padding: 1rem;
@@ -316,7 +311,7 @@
     flex-direction: column;
   }
 
-  .information__login>h1 {
+  .information__login > h1 {
     font-size: 1.6rem;
   }
 
@@ -370,6 +365,9 @@
   .category-page-container {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+  .btn__product {
+    opacity: 1;
   }
 }
 
@@ -452,7 +450,7 @@
   }
 
   #adminOrders .admin-order,
-  #adminProducts>div {
+  #adminProducts > div {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -624,13 +622,11 @@
   }
 }
 
-
 /* =========================
    FIX: item.html — 320px a 400px
    Corrige quebra do .wrap e mantém conteúdo centralizado
    ========================= */
 @media (min-width: 320px) and (max-width: 400px) {
-
   /* Corrige o contêiner principal */
   .product-detail .wrap,
   .wrap {
@@ -718,7 +714,7 @@
   }
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
   .footer__container {
     flex-direction: column;
     gap: 24px;
@@ -729,15 +725,13 @@
    LOGIN — RESPONSIVIDADE ATÉ 900px
    ========================================================== */
 @media (max-width: 900px) {
-
   /* Remove vídeo e usa fundo preto sólido */
   .background-login {
     display: none;
   }
 
-  body,
   .section__login {
-    background-color: #000;
+    background-color: black;
   }
 
   .section__login {
@@ -761,7 +755,7 @@
   }
 
   /* Título e logo */
-  .information__login>h1 {
+  .information__login > h1 {
     font-size: 1.8rem;
     line-height: 1.3;
     padding: 0 1rem;
@@ -811,11 +805,9 @@
     letter-spacing: 2px;
     box-shadow: 0 0 15px 2px var(--shadow-color);
   }
-
 }
 
 @media (max-width: 768px) {
-
   /* Ícone holograma */
   .logo-holograma-link {
     position: relative;
@@ -861,7 +853,7 @@
     align-items: center;
   }
 
-  .cart-item-details>h4 {
+  .cart-item-details > h4 {
     padding: 20px;
   }
 
@@ -886,22 +878,17 @@
   }
 }
 
-
-
 /* ==========================================================
    ADMIN DASHBOARD RESPONSIVO
    ========================================================== */
 
 @media (max-width: 767px) {
-
   .admin-dashboard-layout {
     margin-top: 112px;
   }
 }
 
 @media (max-width: 1024px) {
-
-
   .admin-dashboard-layout {
     grid-template-columns: 200px 1fr;
     margin-top: 140px;
