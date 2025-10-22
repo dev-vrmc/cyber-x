@@ -280,23 +280,6 @@
     })();
   </script> 
 
-<!--   <div style="max-width: 420px;">
-    <iframe id="bf-inline-chat-f440609e-f0dd-4514-a925-acef86a126d1"
-      src="https://chats.botforger.com#/widget/f440609e-f0dd-4514-a925-acef86a126d1" title="BotForger Chatbot"
-      loading="lazy" allow="clipboard-read; clipboard-write"
-      style="width: 100%; height: 640px; border: 0; border-radius: 20px; background: transparent;"></iframe>
-  </div>
-  <script>
-    (function () {
-      function send() {
-        var iframe = document.getElementById('bf-inline-chat-f440609e-f0dd-4514-a925-acef86a126d1');
-        if (!iframe) return;
-        iframe.contentWindow?.postMessage({ type: 'CHATBOT_PAGE_CONTEXT', url: window.location.href, html: document.documentElement.outerHTML }, '*');
-      }
-      ['load', 'DOMContentLoaded', 'hashchange', 'popstate'].forEach(function (evt) { window.addEventListener(evt, send); });
-    })();
-  </script> -->
-
   <script type="module">
     import { productManager } from './geral/js/products.js';
     import { renderProducts } from './geral/js/ui.js';
