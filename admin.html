@@ -117,6 +117,12 @@
             </a>
           </li>
           <li>
+            <a href="#" class="admin-sidebar-link" data-target="#admin-reviews-section">
+              <i class="ri-star-line"></i>
+              <span>Avaliações</span>
+            </a>
+          </li>
+          <li>
             <a href="index.html" class="admin-sidebar-link">
               <i class="ri-arrow-go-back-line"></i>
               <span>Voltar ao Site</span>
@@ -180,7 +186,8 @@
             <input name="brand_meta" placeholder="CyberX • Linha CellPhone">
 
             <label>Descrição</label>
-            <textarea name="description" placeholder="O OnePlus 15 é o novo flagship da marca, trazendo inovações significativas em design, desempenho e recursos fotográficos."></textarea>
+            <textarea name="description"
+              placeholder="O OnePlus 15 é o novo flagship da marca, trazendo inovações significativas em design, desempenho e recursos fotográficos."></textarea>
 
             <label>Parcelas</label>
             <input name="installments" placeholder="12x de R$ 1.083,25">
@@ -238,8 +245,25 @@
           </div>
         </section>
       </section>
+
+      <section id="admin-reviews-section" class="admin-section">
+        <h1>⭐ Avaliações</h1>
+        <div id="adminReviewsContainer">
+        </div>
+      </section>
     </main>
   </div>
+
+  <div id="admin-confirm-modal" class="modal-overlay">
+    <div class="modal-content confirm-modal">
+      <p id="admin-confirm-message">Tem certeza?</p>
+      <div class="confirm-modal-buttons">
+        <button id="confirm-cancel" class="button-secondary">Cancelar</button>
+        <button id="admin-confirm-yes" class="button">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="footer__container">
       <div class="footer__column footer__logo">

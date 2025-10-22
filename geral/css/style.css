@@ -1462,43 +1462,6 @@ label {
     box-shadow: 0 0 40px var(--first-color-light);
 }
 
-/* ===== CEP ===== */
-.cep-row {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.cep-row input {
-    background: var(--container-color);
-    border: 1px solid var(--shadow-color);
-    color: var(--title-color);
-    padding: 0.5rem 0.7rem;
-    border-radius: 6px;
-    flex: 1;
-    transition: all 0.3s ease;
-}
-
-.cep-row input:focus {
-    outline: none;
-    border-color: var(--first-color);
-    box-shadow: 0 0 8px var(--first-color-light);
-}
-
-.cep-row button {
-    background: var(--first-color);
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.cep-row button:hover {
-    background: var(--first-color-alt);
-    transform: scale(1.03);
-}
-
 /* ===== REVIEWS ===== */
 .reviews {
     text-align: center;
@@ -3328,8 +3291,8 @@ label {
     padding: 0.8rem 1.5rem;
 }
 
-.modal-actions .button-secondary {
-    background-color: var(--second-color);
+.modal-actions {
+    background-color: var(--container-color);
     color: var(--body-color-inverse);
     border: none;
     padding: 0.8rem 1.5rem;
@@ -3400,18 +3363,6 @@ label {
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-}
-
-.button-secondary {
-    background-color: var(--accent-color);
-    color: var(--title-color);
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-}
-
-.button-secondary:hover {
-    background-color: #555;
 }
 
 /* ===================
@@ -3580,10 +3531,10 @@ label {
 }
 
 /* Botão Secundário (Cancelar / Editar) */
-.modal-actions .button-secondary {
-  background-color: transparent;
-  border: 1px solid var(--second-color);
-  color: var(--second-color);
+.modal-actions .button-secondary, .button-secondary {
+  background-color: var(--first-color-alt);
+  border: 1px solid var(--first-color-light);
+  color: var(--body-color);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
@@ -3593,9 +3544,9 @@ label {
   text-decoration: none; /* Caso use como link */
 }
 
-.modal-actions .button-secondary:hover {
-  background-color: var(--second-color);
-  color: var(--body-color-inverse);
+.modal-actions .button-secondary:hover, .button-secondary:hover {
+  background-color: var(--body-color);
+  color: var(--first-color-alt);
 }
 
 .confirm-modal p {
@@ -3649,4 +3600,163 @@ label {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--first-color);
+}
+
+/* ===================
+   ADMIN REVIEWS SECTION
+=================== */
+#adminReviewsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.admin-review-card {
+    background-color: var(--container-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--shadow-color);
+    transition: 0.3s all ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px var(--shadow-color); 
+}
+
+.admin-review-card:hover {
+    transform: translateY(-4px); 
+    box-shadow: 0 6px 20px var(--first-color-light);
+}
+
+.admin-review-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--shadow-color);
+    padding-bottom: 1rem;
+}
+
+.admin-review-header .review-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0; 
+}
+
+.admin-review-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.admin-review-info .review-author-name {
+    font-weight: 600;
+    color: var(--title-color);
+    font-size: var(--normal-font-size); 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.admin-review-info .review-product-name {
+    font-size: var(--small-font-size);
+    color: var(--text-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.admin-review-info .stars {
+    font-size: 1rem;
+    color: #ffc107; 
+}
+
+.admin-review-comment {
+    font-size: var(--normal-font-size);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    word-break: break-word;
+    color: var(--text-color); 
+}
+
+.admin-review-comment i { 
+    opacity: 0.7;
+}
+
+.admin-review-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.admin-review-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--shadow-color);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.admin-review-image:hover {
+    transform: scale(1.1);
+    border-color: var(--first-color);
+}
+
+.admin-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--small-font-size);
+    color: var(--second-color);
+    padding-top: 10px;
+    border-top: 1px solid var(--shadow-color);
+    margin-top: auto;
+}
+
+.admin-review-footer .delete-btn {
+    font-size: var(--small-font-size);
+    padding: 4px 10px;
+    display: flex; 
+    align-items: center;
+    gap: 4px;
+}
+
+/* MODIFICADO: Transforma o footer em flexbox para alinhar data e botão */
+.review-card footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-color-alt, #777);
+    margin-top: 0.5rem; /* Espaçamento */
+    padding-top: 0.5rem; /* Linha de separação */
+    border-top: 1px solid var(--shadow-color);
+}
+
+/* NOVO: Botão para usuário deletar a própria review em item.html */
+.delete-my-review-btn {
+    background: none;
+    border: 1px solid var(--first-color-alt);
+    color: var(--first-color-alt);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: var(--small-font-size);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.delete-my-review-btn:hover {
+    background: var(--first-color-alt);
+    color: #fff;
+    transform: scale(1.05);
 }

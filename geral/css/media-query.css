@@ -959,3 +959,24 @@
     padding: 1rem;
   }
 }
+
+@media (max-width: 380px) {
+  .admin-review-card {
+    max-width: 290px;
+    justify-content: center;
+  }
+  .admin-content {
+    padding: 0px;
+  }
+
+  .admin-review-footer {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  #adminReviewsContainer {
+    justify-items: center;
+    justify-content: center;
+  }
+}

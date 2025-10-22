@@ -2,7 +2,6 @@
 
 import { supabase } from './supabase.js';
 import { authManager } from './auth.js';
-// ADICIONADO: formatPrice
 import { productManager, formatPrice } from './products.js';
 import { showToast, showLoader, hideLoader } from './ui.js';
 
@@ -27,7 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         await Promise.all([
             loadDashboardStats(),
             loadProducts(),
-            loadOrders()
+            loadOrders(),
+            loadReviews() // Carrega as avaliações
         ]);
 
         // Lógica de navegação da barra lateral
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // =======================================================
-// NOVA LÓGICA: NAVEGAÇÃO DA BARRA LATERAL
+// NAVEGAÇÃO DA BARRA LATERAL
 // =======================================================
 function setupSidebarNavigation() {
     const links = document.querySelectorAll('.admin-sidebar-link');
@@ -127,7 +127,7 @@ function setupSidebarNavigation() {
 }
 
 // =======================================================
-// NOVA LÓGICA: CARREGAR ESTATÍSTICAS DO DASHBOARD
+// CARREGAR ESTATÍSTICAS DO DASHBOARD
 // =======================================================
 async function loadDashboardStats() {
     showLoader();
@@ -163,15 +163,68 @@ async function loadDashboardStats() {
     }
 }
 
+// =======================================================
+// LÓGICA DO MODAL DE CONFIRMAÇÃO ADMIN
+// =======================================================
+/**
+ * Exibe um modal de confirmação genérico para o painel admin.
+ * @param {string} message A mensagem a ser exibida no modal.
+ * @param {function} onConfirmCallback A função a ser executada se o admin confirmar.
+ */
+function showAdminConfirmModal(message, onConfirmCallback) {
+    const modal = document.getElementById('admin-confirm-modal');
+    const messageEl = document.getElementById('admin-confirm-message');
+    const confirmBtn = document.getElementById('admin-confirm-yes');
+    const cancelBtn = document.getElementById('confirm-cancel'); // ID do CSS
+
+    if (!modal || !messageEl || !confirmBtn || !cancelBtn) {
+        console.error('Elementos do modal de confirmação não encontrados.');
+        // Fallback para o confirm nativo
+        if (confirm(message)) {
+            onConfirmCallback();
+        }
+        return;
+    }
+
+    messageEl.textContent = message;
+
+    // Clona os botões para limpar listeners de cliques antigos
+    const newConfirmBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+    const newCancelBtn = cancelBtn.cloneNode(true);
+    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+    const hideModal = () => modal.classList.remove('show');
+
+    // Adiciona listener ao novo botão de confirmar
+    newConfirmBtn.addEventListener('click', () => {
+        onConfirmCallback();
+        hideModal();
+    });
+
+    // Adiciona listener ao novo botão de cancelar
+    newCancelBtn.addEventListener('click', hideModal);
+
+    // Adiciona listener para fechar clicando fora
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            hideModal();
+        }
+    }, { once: true }); // Executa apenas uma vez
+
+    // Mostra o modal
+    modal.classList.add('show');
+}
+
 
 // =======================================================
-// LÓGICA DE PRODUTOS (EXISTENTE)
+// LÓGICA DE PRODUTOS
 // =======================================================
 async function loadProducts() {
     showLoader();
     try {
         const container = document.getElementById('adminProducts');
-        // NOTA: getProducts() não tem um argumento booleano 'true'. Removi.
         const products = await productManager.getProducts();
 
         if (!container) return;
@@ -220,7 +273,8 @@ function handleEdit(product) {
 }
 
 async function handleDelete(id) {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
+    // MODIFICADO: Usa o modal de confirmação
+    showAdminConfirmModal('Tem certeza que deseja excluir este produto?', async () => {
         showLoader();
         try {
             const { error } = await supabase.from('products').delete().eq('id', id);
@@ -235,11 +289,11 @@ async function handleDelete(id) {
         } finally {
             hideLoader();
         }
-    }
+    });
 }
 
 // =======================================================
-// LÓGICA DE PEDIDOS (EXISTENTE)
+// LÓGICA DE PEDIDOS
 // =======================================================
 async function loadOrders() {
     showLoader();
@@ -368,7 +422,8 @@ async function updateOrderStatus(orderId, status) {
 }
 
 async function handleDeleteOrder(orderId) {
-    if (confirm(`Tem certeza que deseja excluir o pedido #${orderId}? Esta ação não pode ser desfeita.`)) {
+    // MODIFICADO: Usa o modal de confirmação
+    showAdminConfirmModal(`Tem certeza que deseja excluir o pedido #${orderId}? Esta ação não pode ser desfeita.`, async () => {
         showLoader();
         try {
             const { error } = await supabase.from('orders').delete().eq('id', orderId);
@@ -383,5 +438,109 @@ async function handleDeleteOrder(orderId) {
         } finally {
             hideLoader();
         }
+    });
+}
+
+// =======================================================
+// LÓGICA DE AVALIAÇÕES (REVIEWS)
+// =======================================================
+async function loadReviews() {
+    showLoader();
+    const container = document.getElementById('adminReviewsContainer');
+    if (!container) return;
+
+    try {
+        // Busca avaliações, juntando dados do perfil (autor) e do produto
+        const { data: reviews, error } = await supabase
+            .from('reviews')
+            .select(`
+                id,
+                created_at,
+                comment,
+                rating,
+                image_urls,
+                profile:profiles(full_name, avatar_url),
+                product:products(name)
+            `)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!reviews || reviews.length === 0) {
+            container.innerHTML = '<p>Nenhuma avaliação encontrada.</p>';
+            return;
+        }
+
+        container.innerHTML = reviews.map(review => {
+            const avatarSrc = review.profile?.avatar_url || 'geral/img/logo/simbolo.png';
+            const authorName = review.profile?.full_name || 'Usuário Anônimo';
+            const productName = review.product?.name || 'Produto Removido';
+
+            // Gera HTML para as imagens (se houver)
+            const imagesHTML = (review.image_urls || []).map(url =>
+                `<img src="${url}" alt="Imagem da avaliação" class="admin-review-image">`
+            ).join('');
+
+            return `
+            <div class="admin-review-card">
+                <header class="admin-review-header">
+                    <img src="${avatarSrc}" alt="Avatar de ${authorName}" class="review-avatar">
+                    <div class="admin-review-info">
+                        <span class="review-author-name">${authorName}</span>
+                        <span class="review-product-name">Produto: <strong>${productName}</strong></span>
+                        <div class="stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                    </div>
+                </header>
+                <p class="admin-review-comment">${review.comment || '<i>(Sem comentário)</i>'}</p>
+                ${imagesHTML ? `<div class="admin-review-images">${imagesHTML}</div>` : ''}
+                <footer class="admin-review-footer">
+                    <span>${new Date(review.created_at).toLocaleString('pt-BR')}</span>
+                    <button class="delete-btn" data-id="${review.id}">
+                        <i class="ri-delete-bin-line"></i> Excluir
+                    </button>
+                </footer>
+            </div>
+            `;
+        }).join('');
+
+        // Adiciona listeners aos botões de excluir
+        container.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Pega o ID do botão mais próximo
+                const reviewId = e.target.closest('.delete-btn').dataset.id;
+                handleDeleteReview(reviewId);
+            });
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar avaliações:', error);
+        container.innerHTML = '<p>Erro ao carregar avaliações.</p>';
+        showToast('Erro ao carregar avaliações.', 'error');
+    } finally {
+        hideLoader();
     }
+}
+
+async function handleDeleteReview(id) {
+    // MODIFICADO: Usa o modal de confirmação
+    showAdminConfirmModal('Tem certeza que deseja excluir esta avaliação? Esta ação não pode ser desfeita.', async () => {
+        showLoader();
+        try {
+            // Deleta a avaliação da tabela 'reviews'
+            const { error } = await supabase.from('reviews').delete().eq('id', id);
+            
+            if (error) {
+                showToast(`Erro ao excluir avaliação: ${error.message}`, 'error');
+            } else {
+                showToast('Avaliação excluída com sucesso!');
+                // O trigger 'on_review_change' no Supabase irá
+                // recalcular a média do produto automaticamente.
+                await loadReviews(); // Recarrega a lista de avaliações
+            }
+        } catch (err) {
+            showToast(`Erro: ${err.message}`, 'error');
+        } finally {
+            hideLoader();
+        }
+    });
 }
